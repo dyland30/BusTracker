@@ -47,9 +47,11 @@ require('./routes.js')(app, passport); // load our routes and pass in our app an
 
 
 // Import Models and controllers
-var models     = require('./models/Bus')(app, mongoose);
-var BusCtrl = require('./controllers/BusController.js');
+var unidadModel     = require('./models/Unidad')(app, mongoose);
+var organizacionModel     = require('./models/Organizacion')(app, mongoose);
 
+var unidadCtrl = require('./controllers/UnidadController.js');
+var organizacionCtrl = require('./controllers/OrganizacionController.js');
 // Example Route
 /*
 var router = express.Router();
@@ -63,16 +65,26 @@ app.use(router);
 // API routes
 var routerApi = express.Router();
 
-routerApi.route('/buses')
-  .get(BusCtrl.findAll)
-  .post(BusCtrl.add);
+routerApi.route('/unidad')
+  .get(unidadCtrl.findAll)
+  .post(unidadCtrl.add);
 
-routerApi.route('/buses/:id')
-  .get(BusCtrl.findById)
-  .put(BusCtrl.update)
-  .delete(BusCtrl.delete);
+routerApi.route('/unidad/:id')
+  .get(unidadCtrl.findById)
+  .put(unidadCtrl.update)
+  .delete(unidadCtrl.delete);
+
+  routerApi.route('/organizacion')
+    .get(organizacionCtrl.findAll)
+    .post(organizacionCtrl.add);
+
+  routerApi.route('/organizacion/:id')
+    .get(organizacionCtrl.findById)
+    .put(organizacionCtrl.update)
+    .delete(organizacionCtrl.delete);
 
 app.use('/api', routerApi);
+
 
 // Start server
 app.listen(port, function() {

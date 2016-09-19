@@ -60,6 +60,9 @@ module.exports = function(app, passport) {
         res.redirect('/');
     });
 
+
+
+
 };
 
 // route middleware to make sure a user is logged in

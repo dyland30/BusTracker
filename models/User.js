@@ -27,8 +27,11 @@ var userSchema = mongoose.Schema({
         token        : String,
         email        : String,
         name         : String
-    }
-
+    },
+		idOrganizacion : {type: mongoose.Schema.Types.ObjectId, ref: 'Organizacion'},
+		nombres: String,
+		docId: String,
+		direccion:[String]
 });
 
 // methods ======================
