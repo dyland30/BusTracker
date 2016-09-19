@@ -16,6 +16,7 @@
   "author": "Daniel Castillo",
   "license": "ISC",
   "dependencies": {
+    "acl": "^0.4.9",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.2",
     "connect-flash": "^0.1.1",

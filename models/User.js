@@ -31,7 +31,8 @@ var userSchema = mongoose.Schema({
 		idOrganizacion : {type: mongoose.Schema.Types.ObjectId, ref: 'Organizacion'},
 		nombres: String,
 		docId: String,
-		direccion:[String]
+		direccion:[String],
+    roles:{type:[String], defalut:'user'} //  user,companyAdmin, sysadmin
 });
 
 // methods ======================
