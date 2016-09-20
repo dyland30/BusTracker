@@ -1,0 +1,28 @@
+<!-- views/index.ejs -->
+<!doctype html>
+<html>
+<head>
+    <% include ../partials/head %>
+</head>
+<body>
+  <header>
+    <% include ../partials/header %>
+  </header>
+  <main>
+
+<div class="container">
+    <h4><span class="fa fa-lock"></span> Organizaciones</h4>
+
+    <ul>
+      <% organizaciones.forEach(function(org){%>
+        <li><%= org.razon_social %> Contacto: <%= org.contacto[0].nombre %></li>
+          <% });%>
+    </ul>
+
+</div>
+</main>
+<footer>
+  <% include ../partials/footer %>
+</footer>
+</body>
+</html>

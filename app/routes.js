@@ -1,10 +1,21 @@
-module.exports = function(app, passport, acl) {
+module.exports = function(app, passport, acl,mongoose,express) {
+
+//MODELOS Y CONTROLADORES
+  var unidadModel     = require('./models/Unidad')(app, mongoose);
+  var organizacionModel     = require('./models/Organizacion')(app, mongoose);
+
+var Organizacion = mongoose.model('Organizacion');
+
+  var unidadCtrl = require('./controllers/UnidadController.js');
+  var organizacionCtrl = require('./controllers/OrganizacionController.js');
+
+
 
     // =====================================
     // HOME PAGE (with login links) ========
     // =====================================
     app.get('/', function(req, res) {
-        res.render('index.ejs'); // load the index.ejs file
+        res.render('../public/views/index.ejs'); // load the index.ejs file
     });
 
     // =====================================
@@ -14,7 +25,7 @@ module.exports = function(app, passport, acl) {
     app.get('/login', function(req, res) {
 
         // render the page and pass in any flash data if it exists
-        res.render('login.ejs', { message: req.flash('loginMessage') });
+        res.render('../public/views/login.ejs', { message: req.flash('loginMessage') });
     });
 
     // process the login form
@@ -31,7 +42,7 @@ module.exports = function(app, passport, acl) {
     app.get('/signup', function(req, res) {
 
         // render the page and pass in any flash data if it exists
-        res.render('signup.ejs', { message: req.flash('signupMessage') });
+        res.render('../public/views/signup.ejs', { message: req.flash('signupMessage') });
     });
 
     // process the signup form
@@ -47,7 +58,7 @@ module.exports = function(app, passport, acl) {
     // we will want this protected so you have to be logged in to visit
     // we will use route middleware to verify this (the isLoggedIn function)
     app.get('/profile', isLoggedIn, function(req, res) {
-        res.render('profile.ejs', {
+        res.render('../public/views/profile.ejs', {
             user : req.user // get the user out of session and pass to template
         });
     });
@@ -61,15 +72,26 @@ module.exports = function(app, passport, acl) {
     });
 
     // =====================================
-    // PROFILE SECTION =====================
+    // Mantenimientos =====================
     // =====================================
     // we will want this protected so you have to be logged in to visit
     // we will use route middleware to verify this (the isLoggedIn function)
     app.get('/mantOrganizacion', isLoggedIn, acl.middleware( 1, get_user_id ) , function(req, res) {
-        res.render('./mantOrganizacion/index.ejs', {
-            user : req.user,// get the user out of session and pass to template
-            organizaciones: []
+
+        Organizacion.find(function(err,orgs){
+          if(err){
+            res.render('../public/views/mantOrganizacion/index.ejs', {
+                user : req.user,// get the user out of session and pass to template
+                organizaciones: []
+            });
+          } else{
+            res.render('../public/views/mantOrganizacion/index.ejs', {
+                user : req.user,// get the user out of session and pass to template
+                organizaciones: orgs
+            });
+          }
         });
+
     });
 
 //rutas de control de accesos
@@ -84,6 +106,33 @@ module.exports = function(app, passport, acl) {
        acl.removeUserRoles( request.params.user, request.params.role );
        response.send( request.params.user + ' is not a ' + request.params.role + ' anymore.' );
    });
+
+
+   //API ROUTES
+
+
+
+   var routerApi = express.Router();
+
+   routerApi.route('/unidad')
+     .get(unidadCtrl.findAll)
+     .post(unidadCtrl.add);
+
+   routerApi.route('/unidad/:id')
+     .get(unidadCtrl.findById)
+     .put(unidadCtrl.update)
+     .delete(unidadCtrl.delete);
+
+     routerApi.route('/organizacion')
+       .get(organizacionCtrl.findAll)
+       .post(organizacionCtrl.add);
+
+     routerApi.route('/organizacion/:id')
+       .get(organizacionCtrl.findById)
+       .put(organizacionCtrl.update)
+       .delete(organizacionCtrl.delete);
+
+   app.use('/api', routerApi);
 
 };
 
