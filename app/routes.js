@@ -3,9 +3,7 @@ module.exports = function(app, passport, acl,mongoose,express) {
 //MODELOS Y CONTROLADORES
   var unidadModel     = require('./models/Unidad')(app, mongoose);
   var organizacionModel     = require('./models/Organizacion')(app, mongoose);
-
-var Organizacion = mongoose.model('Organizacion');
-
+  var Organizacion = mongoose.model('Organizacion');
   var unidadCtrl = require('./controllers/UnidadController.js');
   var organizacionCtrl = require('./controllers/OrganizacionController.js');
 
