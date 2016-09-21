@@ -3,9 +3,11 @@ module.exports = function(app, passport, acl,mongoose,express) {
 //MODELOS Y CONTROLADORES
   var unidadModel     = require('./models/Unidad')(app, mongoose);
   var organizacionModel     = require('./models/Organizacion')(app, mongoose);
+  var unidadHistorialModel = require('./models/UnidadHistorial')(app,mongoose);
   var Organizacion = mongoose.model('Organizacion');
   var unidadCtrl = require('./controllers/UnidadController.js');
   var organizacionCtrl = require('./controllers/OrganizacionController.js');
+  var unidadHistorialCtrl = require('./controllers/UnidadHistorialController.js');
 
 
 
@@ -108,27 +110,25 @@ module.exports = function(app, passport, acl,mongoose,express) {
 
    //API ROUTES
 
-
-
    var routerApi = express.Router();
 
-   routerApi.route('/unidad')
-     .get(unidadCtrl.findAll)
-     .post(unidadCtrl.add);
+   //lista completa de unidades
+   routerApi.route('/unidad').get(unidadCtrl.findAll).post(unidadCtrl.add);
+   //
+   routerApi.route('/unidad/:id').get(unidadCtrl.findById).put(unidadCtrl.update).delete(unidadCtrl.delete);
 
-   routerApi.route('/unidad/:id')
-     .get(unidadCtrl.findById)
-     .put(unidadCtrl.update)
-     .delete(unidadCtrl.delete);
+   //obtener organizaciones por unidades
+   routerApi.route('/organizacion/unidad/:idOrganizacion').get(unidadCtrl.findByOrganizacion);
 
-     routerApi.route('/organizacion')
-       .get(organizacionCtrl.findAll)
-       .post(organizacionCtrl.add);
+   routerApi.route('/historial').get(unidadHistorialCtrl.findAll).post(unidadHistorialCtrl.add);
 
-     routerApi.route('/organizacion/:id')
-       .get(organizacionCtrl.findById)
-       .put(organizacionCtrl.update)
-       .delete(organizacionCtrl.delete);
+   routerApi.route('/historial/:id').get(unidadHistorialCtrl.findById).put(unidadHistorialCtrl.update).delete(unidadHistorialCtrl.delete);
+
+   routerApi.route('/unidad/historial/:idUnidad').get(unidadHistorialCtrl.findByUnidadId);
+
+   routerApi.route('/organizacion').get(organizacionCtrl.findAll).post(organizacionCtrl.add);
+
+   routerApi.route('/organizacion/:id').get(organizacionCtrl.findById).put(organizacionCtrl.update).delete(organizacionCtrl.delete);
 
    app.use('/api', routerApi);
 

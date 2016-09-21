@@ -10,6 +10,15 @@ exports.findAll = function(req, res) {
 	});
 };
 
+//buscar por organizacion
+exports.findByOrganizacion = function(req,res){
+	Unidad.where('properties.idOrganizacion',req.params.idOrganizacion).exec(function(err,unidades){
+		if(err) return res.send(500, err.message);
+		console.log('GET /organizacion/unidades')
+		res.status(200).jsonp(unidades);
+	});
+};
+
 //GET - Return a unidad with specified ID
 exports.findById = function(req, res) {
 	Unidad.findById(req.params.id, function(err, unidad) {
