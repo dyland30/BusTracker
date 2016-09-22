@@ -8,7 +8,7 @@ module.exports = function(app, passport, acl,mongoose,express) {
   var unidadCtrl = require('./controllers/UnidadController.js');
   var organizacionCtrl = require('./controllers/OrganizacionController.js');
   var unidadHistorialCtrl = require('./controllers/UnidadHistorialController.js');
-
+  var userCtrl = require('./controllers/UserController.js');
 
 
     // =====================================
@@ -112,6 +112,9 @@ module.exports = function(app, passport, acl,mongoose,express) {
 
    var routerApi = express.Router();
 
+   //la lista de usuarios no debe ser expuesta
+
+   routerApi.route('/users/:idOrganizacion').get(userCtrl.findByOrganizacion);
    //lista completa de unidades
    routerApi.route('/unidad').get(unidadCtrl.findAll).post(unidadCtrl.add);
    //
