@@ -5,8 +5,10 @@ module.exports = function(app, passport, acl,mongoose,express) {
   var organizacionModel     = require('./models/Organizacion')(app, mongoose);
   var unidadHistorialModel = require('./models/UnidadHistorial')(app,mongoose);
   var Organizacion = mongoose.model('Organizacion');
+  var TipoUnidadModel = require('./models/TipoUnidad')(app,mongoose);
   var unidadCtrl = require('./controllers/UnidadController.js');
   var organizacionCtrl = require('./controllers/OrganizacionController.js');
+  var tipoUnidadCtrl = require('./controllers/TipoUnidadController.js');
   var unidadHistorialCtrl = require('./controllers/UnidadHistorialController.js');
   var userCtrl = require('./controllers/UserController.js');
 
@@ -62,6 +64,19 @@ module.exports = function(app, passport, acl,mongoose,express) {
             user : req.user // get the user out of session and pass to template
         });
     });
+
+    // =====================================
+    // TRACKING SECTION =====================
+    // =====================================
+    app.get('/tracking', isLoggedIn, function(req, res) {
+        res.render('../public/views/tracking.ejs', {
+            user : req.user // get the user out of session and pass to template
+        });
+    });
+
+
+
+
 
     // =====================================
     // LOGOUT ==============================
@@ -133,12 +148,16 @@ module.exports = function(app, passport, acl,mongoose,express) {
 
    routerApi.route('/organizacion/:id').get(organizacionCtrl.findById).put(organizacionCtrl.update).delete(organizacionCtrl.delete);
 
+   routerApi.route('/tipounidad').get(tipoUnidadCtrl.findAll).post(tipoUnidadCtrl.add);
+
+   routerApi.route('/tipounidad/:id').get(tipoUnidadCtrl.findById).put(tipoUnidadCtrl.update).delete(tipoUnidadCtrl.delete);
+
+
    app.use('/api', routerApi);
 
 };
 
 function get_user_id( request, response ) {
-
     return request.user.id.toString();
 }
 

@@ -37,8 +37,9 @@ var session = require('express-session');
  app.use(passport.session()); // persistent login sessions
  app.use(flash());
 
-
-
+app.use('/js',express.static(__dirname+'/public/js'));
+app.use('/css',express.static(__dirname+'/public/css'));
+app.use('/images',express.static(__dirname+'/public/images'));
 
 // Connection to DB
 mongoose.connect(process.env.DB_URI, function(err, res) {
