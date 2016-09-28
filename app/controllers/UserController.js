@@ -10,6 +10,10 @@ exports.findAll = function(req, res) {
     });
 };
 
+exports.getUserSession = function(req,res){
+  //devolver usuario en sesion
+  res.status(200).jsonp(req.user);
+};
 //buscar por organizacion
 exports.findByOrganizacion = function(req, res) {
     User.where('idOrganizacion', req.params.idOrganizacion).exec(function(err, users) {

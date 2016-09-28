@@ -18,7 +18,10 @@
     </script>
 
     <div class="container" ng-app="trackingApp" ng-controller="MainController">
-      <h3>{{organizacion}}</h3>
+
+
+      <h6>{{usuario.local.email}}</h6>
+      <h3>{{organizacion.razon_social}}</h3>
       <!-- Opciones de Filtro -->
       <div class="panel panel-default">
         Seleccionar Unidad : <select class="" name=""><option/> </select> <button type="iniciar" name="iniciar" onclick="iniciarMovimiento()">Iniciar Movimiento</button>
@@ -31,7 +34,6 @@
         </div>
 
       </div>
-
     </div>
   </main>
   <footer>
@@ -40,6 +42,11 @@
 
 
   <script type="text/javascript">
+
+  // obtener usuario de session
+
+
+
   var map;
   var marker;
   var movPos = {lat:-7.161709, lng:-78.509672};

@@ -134,6 +134,10 @@ module.exports = function(app, passport, acl, mongoose, express) {
     //la lista de usuarios no debe ser expuesta
 
     routerApi.route('/users/:idOrganizacion').get(userCtrl.findByOrganizacion);
+
+    //usuario logueado
+    routerApi.route('/user').get(userCtrl.getUserSession);
+
     //lista completa de unidades
     routerApi.route('/unidad').get(unidadCtrl.findAll).post(unidadCtrl.add);
     //
