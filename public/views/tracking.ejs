@@ -13,11 +13,16 @@
 
   </header>
   <main>
-    <div class="container">
-      <h3>Nombre Empresa</h3>
+    <script src="js/trackingApp.js" ></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfaLOJAefzXT75bIWgxd8RmcWz5rWbMec&signed_in=true">
+    </script>
+
+    <div class="container" ng-app="trackingApp" ng-controller="MainController">
+      <h3>{{organizacion}}</h3>
       <!-- Opciones de Filtro -->
       <div class="panel panel-default">
         Seleccionar Unidad : <select class="" name=""><option/> </select> <button type="iniciar" name="iniciar" onclick="iniciarMovimiento()">Iniciar Movimiento</button>
+        {{5+5}}
       </div>
       <!-- MAPA-->
       <div class="panel panel-default" style="height:700px">
@@ -32,8 +37,7 @@
   <footer>
     <% include partials/footer %>
   </footer>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfaLOJAefzXT75bIWgxd8RmcWz5rWbMec&signed_in=true">
-  </script>
+
 
   <script type="text/javascript">
   var map;

@@ -1,0 +1,646 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main.Master" AutoEventWireup="true" CodeBehind="Ingresos.aspx.cs" Inherits="lap_gsp_ingresos.Ingresos" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="cabecera" runat="server">
+
+    <style type="text/css">
+
+        .app-modal-verFacilidades .modal-dialog {
+          width: 1200px;
+          font-size:small;
+        }
+
+    </style>
+
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="cphContenido" runat="server">
+
+    <script type="text/javascript" src="<%=ResolveUrl("~/") %>js/IngresosAPP/IngresosApp.js"></script>
+
+
+
+
+    <div ng-app="IngresosApp" ng-controller="MainController" id="IngresosApp">
+        <span us-spinner="{radius:30, width:8, length: 16}"></span>
+        <div class="row">
+            <div class="col-md-12">
+            </div>
+        </div>
+        <div id="filtro" class="panel panel-default" style="font-size: small">
+            <div class="panel-body">
+
+                <div class="form-inline">
+                    <div class="form-group">
+                        <label for="cmbPuesto">Puesto:</label>
+                        <select id="cmbPuesto" class="form-control" style="width: 250px" ng-options="puesto.dsc_principal for puesto in listaPuestos track by puesto.cod_atributo" ng-model="puestoSeleccionado" ng-change="cmbPuestoChange()">
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="background-color: #E0ECF8">
+                        <label>
+                            <input type="radio" ng-model="tipoIngreso" value="619" class="form-control" checked="checked" ng-click="buscar(null)" style="background-color: transparent" />
+                            Facilidad
+                        </label>
+                        <label>
+                            <input type="radio" ng-model="tipoIngreso" value="620" class="form-control" ng-click="buscar(null)" style="background-color: transparent" />
+                            Visita   |
+                        </label>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="radio" ng-model="tipoDocumento" value="1" class="form-control" checked="checked" ng-click="buscar(null)" />
+                            Nro. de Doc.
+                        </label>
+                        <label>
+                            <input type="radio" ng-model="tipoDocumento" value="2" class="form-control" ng-click="buscar(null)" />
+                            Nro. de Placa
+                        </label>
+                        <label>
+                            <input type="radio" ng-model="tipoDocumento" value="3" class="form-control" ng-click="buscar(null)" />
+                            Nro. de Pase
+                        </label>
+                        <label>
+                            <input type="radio" ng-model="tipoDocumento" value="4" class="form-control" ng-click="mostrarPopupPersonas()" />
+                            Nom Persona
+                        </label>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <input type="text" id="txtFiltro" class="form-control" style="width: 150px" ng-model="filtro" />
+                        <button id="btnBuscar" class="btn btn-default" ng-click="buscar($event)" type="button"><span class="fa fa-search"></span>Buscar</button>
+                        <button id="btnVerDetalle" class="btn btn-default" type="button" ng-click="verDetalleFacilidad($event)">Ver Detalle</button>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div id="autorizaciones" class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h4>Autorizaciones</h4>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-inline">
+                                    <div class="form-group">
+                                        <label for="txtNombreCompleto">
+                                            Nombre Completo:
+                                        </label>
+                                        <input type="text" id="txtNombreCompleto" class="form-control" style="width: 300px" ng-model="textoPersonaVehiculo" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-bordered table-hover table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th>Act
+
+                                            </th>
+                                            <th>
+                                                <a href="#" ng-click="sortType = 'cod_autorizacion'; sortReverse = !sortReverse">#Facilidad
+                                            <span ng-show="sortType == 'cod_autorizacion' && !sortReverse" class="fa fa-caret-down"></span>
+                                                    <span ng-show="sortType == 'cod_autorizacion' && sortReverse" class="fa fa-caret-up"></span>
+                                                </a>
+                                            </th>
+                                            <th>
+                                                <a href="#" ng-click="sortType = 'dscEntidadGes'; sortReverse = !sortReverse">Entidad
+                                            <span ng-show="sortType == 'dscEntidadGes' && !sortReverse" class="fa fa-caret-down"></span>
+                                                    <span ng-show="sortType == 'dscEntidadGes' && sortReverse" class="fa fa-caret-up"></span>
+                                                </a>
+                                            </th>
+                                            <th>
+                                                <a href="#" ng-click="sortType = 'fch_inicio_autorizacion'; sortReverse = !sortReverse">Inicio
+                                            <span ng-show="sortType == 'fch_inicio_autorizacion' && !sortReverse" class="fa fa-caret-down"></span>
+                                                    <span ng-show="sortType == 'fch_inicio_autorizacion' && sortReverse" class="fa fa-caret-up"></span>
+                                                </a>
+                                            </th>
+                                            <th>
+                                                <a href="#" ng-click="sortType = 'fch_final_autorizacion'; sortReverse = !sortReverse">Fin
+                                            <span ng-show="sortType == 'fch_final_autorizacion' && !sortReverse" class="fa fa-caret-down"></span>
+                                                    <span ng-show="sortType == 'fch_final_autorizacion' && sortReverse" class="fa fa-caret-up"></span>
+                                                </a>
+
+                                            </th>
+                                            <th>
+                                                <a href="#" ng-click="sortType = 'dsc_Motivo'; sortReverse = !sortReverse">Motivo de Facilidad
+                                            <span ng-show="sortType == 'dsc_Motivo' && !sortReverse" class="fa fa-caret-down"></span>
+                                                    <span ng-show="sortType == 'dsc_Motivo' && sortReverse" class="fa fa-caret-up"></span>
+                                                </a>
+
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="vi in listaVisitas | orderBy:sortType:sortReverse">
+                                            <td>
+                                                <input type="radio" name="visitaSeleccionada" ng-model="visitaSeleccionada" ng-value="{{vi}}" ng-click="obtenerAccesos(visitaSeleccionada)" ng-checked="vi.seleccionado" /></td>
+                                            <td>{{vi.cod_autorizacion}}</td>
+                                            <td>{{vi.dscEntidadGes}}</td>
+                                            <td>{{vi.fch_inicio_autorizacion.slice(6, -2) | date: 'dd/MM/yyyy'  }}  </td>
+                                            <td>{{vi.fch_final_autorizacion.slice(6, -2)  | date: 'dd/MM/yyyy' }} </td>
+                                            <td>{{vi.dsc_Motivo}}</td>
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>Accesos</h4>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-bordered table-hover table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th>Incluir</th>
+                                            <th>Accesos</th>
+                                            <th>Puesto</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="ac in listaAccesos">
+                                            <td>
+                                                <input type="checkbox" ng-model="ac.seleccionado" ng-checked="ac.seleccionado" ng-change="updateAccesos(ac)" />
+                                            </td>
+                                            <td>{{ac.dsc_acceso}}</td>
+                                            <td>{{ac.dsc_principal}}</td>
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="ingresos" class="panel panel-default">
+            <div class="panel panel-body">
+                <div class="row">
+                    <div class="col-md-11">
+                        <h4>Ingresos y Salidas</h4>
+                    </div>
+                    <div class="col-md-1">
+                        <button id="btnNuevo" class="btn btn-default" type="button" ng-click="btnNuevoClick()"><span class="fa fa-file-text"></span>Nuevo</button></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-bordered table-hover table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Persona / Vehículo</th>
+                                    <th># Facilidad</th>
+                                    <th>Tipo Doc.</th>
+                                    <th># Pase</th>
+                                    <th>Nro. Doc.</th>
+                                    <th>Hora Ingreso</th>
+                                    <th>Observación Ingreso</th>
+                                    <th>Hora Salida</th>
+                                    <th>Observación Salida</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="ingreso in listaIngresosSalidas">
+                                    <td>{{ingreso.NomPart}}</td>
+                                    <td>{{visitaSeleccionada.cod_autorizacion}}</td>
+                                    <td>{{ingreso.TipoIde}}</td>
+                                    <td>{{ingreso.NumPase}}</td>
+                                    <td>{{ingreso.DocIde}}</td>
+                                    <td>{{ingreso.fch_hora_ingreso.slice(6,-2)==="-62135578800000" ? " - " : ingreso.fch_hora_ingreso.slice(6,-2) | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                    <td>{{ingreso.dsc_observacion_ingreso}}</td>
+                                    <td>{{ingreso.fch_hora_salida.slice(6,-2)==="-62135578800000" ? " - " : ingreso.fch_hora_salida.slice(6,-2) | date:'dd/MM/yyyy HH:mm:ss'}} </td>
+                                    <td>{{ingreso.dsc_observacion_salida}}</td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+
+        <div id="PersonasSinSalida" class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h4>Personas sin salida registrada</h4>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Incluir todos los puestos
+                            <input type="checkbox" ng-model="IncluirPuestos" ng-click="fnIncluirPuestos()" /></h4>
+                    </div>
+                    <div class="col-md-4"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-bordered table-hover table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Persona</th>
+                                    <th>Empresa</th>
+                                    <th>V / F</th>
+                                    <th>#Pase</th>
+                                    <th>Hora Ingreso</th>
+                                    <th>Tiempo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="mov in listaPersonasSinSalida">
+                                    <td>{{mov.dsc_apellido_nombre}}</td>
+                                    <td>{{mov.dsc_entidad}}</td>
+                                    <td>{{mov.dsc_vehiculo}}</td>
+                                    <td>{{mov.num_credencial}}</td>
+                                    <td>{{mov.fch_hora_ingreso.slice(6,-2) | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                                    <td>{{mov.dsc_total_tiempo}}</td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- BUSCAR POR PERSONA-->
+        <!-- editar -->
+        <%--<script type="text/template" id="popupPersonas.html"> --%>
+        <!-- ejecutar-->
+        <script type="text/ng-template" id="popupPersonas.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Consulta de personas con autorizaciones vigentes</h3>
+        </div>
+        <div class="modal-body">
+
+            <div class="row">
+                <div class="col-md-12">
+                     <div class="form-inline">
+                          <div class="form-group">
+                          <label for="txtFiltroPersona">Apellidos o Nombres:</label>
+                                <input type ="text" class="form-control" style="width:300px"  ng-model ="filtroPersona"/>
+                          </div>
+                          <div class="form-group">
+                                <button id="btnBuscarPersona" class="btn btn-default" ng-click ="buscarPersona($event)" type="button"><span class="fa fa-search"></span>Buscar</button>
+                          </div>
+                     </div>
+                </div>
+
+            </div>
+
+            <div class= "row" style ="overflow-y:auto; overflow-x:hidden; height:400px;">
+                <div class="col-md-12">
+                    <table class="table table-bordered table-hover table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th>cod</th>
+                                            <th>Nombre Completo</th>
+                                            <th>Tip. Doc.</th>
+                                            <th>Nro Documento</th>
+                                            <th>Nacionalidad</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="pe in listaPersonas">
+                                            <td>{{pe.cod_persona}}</td>
+                                            <td>{{pe.dsc_apellido_nombre}}</td>
+                                            <td>{{pe.dsc_tipo_docidentidad}}</td>
+                                            <td>{{pe.dsc_numero_docidentidad}}</td>
+                                            <td>{{pe.dsc_nacionalidad }}</td>
+                                            <td>
+                                                <button  class="btn btn-primary" ng-click ="seleccionarPersona($event, pe)" type="button"><span class="fa fa-check-square-o"></span></button>
+
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+
+            </div>
+
+        </script>
+
+        <!-- BOTON NUEVO -->
+        <!-- editar -->
+        <%--<script type="text/template" id="popupNuevoIngreso.html">  --%>
+        <!-- ejecutar-->
+        <script type="text/ng-template" id="popupNuevoIngreso.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Registro de Ingreso / Salida</h3>
+        </div>
+        <div class="modal-body">
+            <div class="form-horizontal">
+                <div class ="form-group">
+                    <label for="rbIngreso" class="col-sm-4">Tipo de Movimiento:</label>
+                    <div class="col-sm-8">
+                        <input type="radio" id="rbIngreso" ng-model="TipoIngreso" value="1" disabled="disabled"/> Ingreso
+                        <input type="radio" ng-model="TipoIngreso" value="2" disabled="disabled"/> Salida
+
+                    </div>
+                </div>
+                <div class ="form-group">
+                    <label for="txtVisitado" class="col-sm-4">Visitado:</label>
+                    <div class="col-sm-8">
+                        <input type="text" id="txtVisitado" ng-model="txtVisitado" class="form-control" readOnly="readOnly"/>
+
+                    </div>
+                </div>
+
+                <div class ="form-group">
+                    <label for="txtNumeroCredencial" class="col-sm-4" >Nro de Pase:</label>
+                    <div class="col-sm-3">
+                        <input type="text" ng-model="txtCredencial" id="txtCredencial" style="width:100px;" class="form-control" autofocus ng-keypress="credencialKeyPress($event)"/>
+
+                    </div>
+
+                    <div class="col-sm-5">
+                       <label> Fecha: {{clock | date:'dd/MM/yyyy HH:mm:ss'}}</label>
+                    </div>
+
+                </div>
+                <div class ="form-group">
+                    <label for="txtObservacion" class="col-sm-4">Observación:</label>
+                    <div class="col-sm-8">
+                        <textarea id="txtObservacion" ng-model="txtObservacion" rows="5" cols="50" class="form-control"/>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+                 <button class="btn btn-primary" id="btnRegistrarIngreso" type="button" ng-click="registrar($event)">Registrar</button>
+                <button class="btn btn-warning" type="button" ng-click="cancel($event)">Cancelar</button>
+         </div>
+
+        </script>
+
+
+
+
+        <%--<script type="text/template" id="popupVerFacilidad.html">--%>
+            <!-- ejecutar-->
+             <script type="text/ng-template" id="popupVerFacilidad.html">
+            <div class="modal-header">
+                <h3 class="modal-title">Ver Detalle de facilidad</h3>
+            </div>
+            <div class="modal-body">
+                <!-- Cabecera -->
+                <div class="form-inline">
+                    <div class="form-group">
+                        <label for="numFacilidad">Número de Facilidad</label>
+                        <input type="text" class="form-control" id="numFacilidad"  ng-model="facilidad.numero" style="width:100px"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="estadoFacilidad">Estado de Facilidad</label>
+                        <input type="text" class="form-control" id="estadoFacilidad" style="width:150px"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="origen">Origen</label>
+                        <input type="text" class="form-control" id="origen" style="width:150px"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipoFacilidad">Tipo de Facilidad</label>
+                        <input type="text" class="form-control" id="tipoFacilidad" style="width:150px" />
+                    </div>
+
+                </div>
+                <hr />
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="numHojaEnvio" class="col-xs-4">Número Hoja de Envío</label>
+                                <input type="text" class="form-control col-xs-8" id="numHojaEnvio" style="width:100px" />
+                            </div>
+
+                        </div>
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4"></div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="solicitadoPor" class="col-xs-4">Solicitado Por Entidad</label>
+                                <input type="text" class="form-control col-xs-8" id="solicitadoPor" style="width:150px"/>
+                            </div>
+
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="tipoSolicitante" class="col-xs-4">Tipo de solicitante</label>
+                                <input type="text" class="form-control col-xs-8" id="tipoSolicitante" style="width:150px"/>
+                            </div>
+
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="solicitadoPara" class="col-xs-4">Solicitado para Entidad</label>
+                                <input type="text" class="form-control col-xs-8" id="solicitadoPara" style="width:150px"/>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="fechas" class="col-xs-4">Fechas:</label>
+                                <textarea  class="form-control col-xs-8" id="fechas"  rows="4" cols="10"  style="width:200px"/>
+                            </div>
+
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="totalDias" class="col-xs-4">Total de días:</label>
+                                <input type="text" class="form-control col-xs-8" id="totalDias" style="width:50px"/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                        </div>
+
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="motivoIngreso" class="col-xs-4">Motivo de Ingreso</label>
+                                <textarea  class="form-control col-xs-8" id="motivoIngreso" rows="5" cols="10" style="width:200px"/>
+                            </div>
+
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="observacion" class="col-xs-4">Observación</label>
+                                <textarea  class="form-control col-xs-8" id="observacion" rows="5" cols="10" style="width:200px"/>
+                            </div>
+
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="comentario" class="col-xs-4">Comentario de aprobación o rechazo</label>
+                                 <textarea  class="form-control col-xs-8" id="comentario" rows="5" cols="10" style="width:200px"/>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-8">
+                        <h4>Lista de personas asignadas</h4>
+                    </div>
+                    <div class="col-md-4">
+                        <h4>Zonas autorizadas</h4>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <table class="table table-bordered table-hover table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Nombre Completo</th>
+                                    <th>Documento</th>
+                                    <th>Nro Documento</th>
+                                    <th>Cargo</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="pe in listaPersonas">
+
+                                    <td>{{}}</td>
+                                    <td>{{}}</td>
+                                    <td>{{}}</td>
+                                    <td>{{}}</td>
+
+                                </tr>
+                            </tbody>
+                         </table>
+
+
+                    </div>
+                    <div class="col-md-4">
+                        <table class="table table-bordered table-hover table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Accesos</th>
+                                    <th>Puesto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="ac in listaAccesos">
+
+                                    <td>{{ac.dsc_acceso}}</td>
+                                    <td>{{ac.dsc_principal}}</td>
+                                </tr>
+                            </tbody>
+                         </table>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-warning" type="button" ng-click="cancel($event)">Cerrar</button>
+            </div>
+
+        </script>
+
+
+
+
+    </div>
+
+    <script type="text/javascript">
+
+        $('#txtFiltro').focus();
+
+        $('#txtFiltro').keypress(function (e) {
+            var regex = new RegExp("^[a-zA-Z0-9]+$");
+            var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+            if (regex.test(str)) {
+                return true;
+            }
+
+            e.preventDefault();
+            return false;
+        });
+
+        /*
+
+            $('#txtCredencial').bind('keypress', function (e) {
+                var code = e.keyCode || e.which;
+                if (code == 13) { //Enter keycode
+                    // alert("click");
+                    $('#btnRegistrarIngreso').trigger("click");
+                }
+            });
+            */
+
+
+        $('#txtFiltro').bind('keypress', function (e) {
+            var code = e.keyCode || e.which;
+            if (code == 13) { //Enter keycode
+                // alert("click");
+                $('#btnBuscar').trigger("click");
+            }
+        });
+
+
+    </script>
+
+
+</asp:Content>

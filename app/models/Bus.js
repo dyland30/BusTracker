@@ -1,22 +1,30 @@
 exports = module.exports = function(app, mongoose) {
 
-	var busSchema = new mongoose.Schema({
-		linea: 		{ type: String },
-    empresa: 	{ type: String },
-    latitud: 	{ type: Number },
-    longitud: { type: Number},
-		tipo: 		{
-			type: String,
-			enum: ['Bus', 'Tren', 'Metro', 'Tram', 'Vapporeto']
-		},
-    estado: {
-			type: String,
-			enum: ['Conectado', 'Desconectado']
-		}
+    var busSchema = new mongoose.Schema({
+        linea: {
+            type: String
+        },
+        empresa: {
+            type: String
+        },
+        latitud: {
+            type: Number
+        },
+        longitud: {
+            type: Number
+        },
+        tipo: {
+            type: String,
+            enum: ['Bus', 'Tren', 'Metro', 'Tram', 'Vapporeto']
+        },
+        estado: {
+            type: String,
+            enum: ['Conectado', 'Desconectado']
+        }
 
-	});
+    });
 
-	mongoose.model('Bus', busSchema);
+    mongoose.model('Bus', busSchema);
 
 };
 
