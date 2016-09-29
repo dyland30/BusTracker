@@ -16,7 +16,7 @@ angular.module('trackingApp', []).controller('MainController', function($scope, 
             $scope.usuario = response.data;
             $scope.obtenerOrganizacion($scope.usuario.idOrganizacion);
             //obtener unidades
-            $scope.obtenerUnidadesOrganizacion($scope.usuario.idOrganizacion);
+            $scope.obtenerUnidadesOrganizacion($scope.usuario.idOrganizacion,function(){});
         }, function myError(response) {
             $scope.mensajeError = response.statusText;
         });
@@ -34,8 +34,6 @@ angular.module('trackingApp', []).controller('MainController', function($scope, 
 
             $scope.organizacion = response.data;
 
-
-
         }, function myError(response) {
             $scope.mensajeError = response.statusText;
         });
@@ -43,11 +41,23 @@ angular.module('trackingApp', []).controller('MainController', function($scope, 
     };
 
     //obtener todas las unidades de la organizacion
-    $scope.obtenerUnidadesOrganizacion = function(idOrganizacion){
+    $scope.obtenerUnidadesOrganizacion = function(idOrganizacion, callback){
 
+      //evitar que se repita la peticion
+
+      var currentdate = new Date();
+      var datetime =currentdate.getDate() + ""
+                + (currentdate.getMonth()+1)  + ""
+                + currentdate.getFullYear() + ""
+                + currentdate.getHours() + ""
+                + currentdate.getMinutes() + ""
+                + currentdate.getSeconds();
+
+
+      var nocache=Math.floor(Math.random()*9999);
       $http({
           method: "GET",
-          url: "api/organizacion/unidad/" + idOrganizacion,
+          url: "api/organizacion/unidad/" + idOrganizacion+"?nocache="+datetime+nocache.toString(),
           headers: {
               'Content-Type': 'application/json; charset=utf-8'
           }
@@ -55,9 +65,12 @@ angular.module('trackingApp', []).controller('MainController', function($scope, 
 
           $scope.listaUnidades = response.data;
           //  alert(response.data);
+          callback();
+
 
       }, function myError(response) {
           $scope.mensajeError = response.statusText;
+            callback();
       });
     };
 

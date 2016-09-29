@@ -58,6 +58,17 @@ exports.update = function(req, res) {
     });
 };
 
+//ACTUALIZAR SOLO LATITUD Y longitud
+exports.updatePosition = function(req,res){
+  Unidad.findById(req.params.id, function(err, unidad) {
+      unidad.geometry.coordinates = req.body.coordinates;
+      unidad.save(function(err) {
+          if (err) return res.send(500, err.message);
+          res.status(200).jsonp(unidad);
+      });
+  });
+};
+
 //DELETE - Delete a unidad with specified ID
 exports.delete = function(req, res) {
     Unidad.findById(req.params.id, function(err, unidad) {

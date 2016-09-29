@@ -99,53 +99,70 @@
 
                 //obtener unidades
                 window.onload = function() {
-                    redraw();
+                    iniciarMonitoreo(); //inicia monitoreo recursivo
                 };
 
 
-                function redraw() {
+                function redraw(callback) {
                     /*map.setCenter({
                         lat: movPos.lat,
                         lng: movPos.lng,
                         alt: 0
                     }); */
                     //remover marcadores
+                    var idOrganizacion = angular.element(document.querySelector('[ng-controller="MainController"]')).scope().usuario.idOrganizacion;
 
-                    listaMarcadores = [];
                     //marker.setPosition(movPos);
-                    var unidades =  angular.element(document.querySelector('[ng-controller="MainController"]')).scope().listaUnidades;
+                    angular.element(document.querySelector('[ng-controller="MainController"]')).scope().obtenerUnidadesOrganizacion(idOrganizacion,function(){
 
-                    unidades.forEach(function(unidad){
-                      var movPos = {
-                          lat: unidad.geometry.coordinates[0],
-                          lng: unidad.geometry.coordinates[1]
-                      };
-
-                      var marker = new google.maps.Marker({
-                          position: movPos,
-                          map: map,
-                          title: unidad.properties.identificador
+                      //remover marcadores
+                      listaMarcadores.forEach(function(marcador){
+                        marcador.setMap(null);
                       });
-                      listaMarcadores.push(marker);
+                      
+                      listaMarcadores = [];
 
-                    });
+                      //callback
+                        var unidades =  angular.element(document.querySelector('[ng-controller="MainController"]')).scope().listaUnidades;
 
+                        unidades.forEach(function(unidad){
+                          var movPos = {
+                              lat: unidad.geometry.coordinates[0],
+                              lng: unidad.geometry.coordinates[1]
+                          };
+
+                          var marker = new google.maps.Marker({
+                              position: movPos,
+                              map: map,
+                              title: unidad.properties.identificador
+                          });
+                          listaMarcadores.push(marker);
+
+                        });
+
+                        callback(); //finaliza ejecucion asincrona
+
+                    }); // fin  obtener organizaciones
 
 
                 }
 
                 //bucle recursivo para asegurar que funcione el setTimeout
                 //var i = 0, n = 100;
-                function iniciarMovimiento() {
-                    movPos.lat += 0.01;
-                    movPos.lng += 0.01;
+                function iniciarMonitoreo() {
+                  //  movPos.lat += 0.01;
+                  //  movPos.lng += 0.01;
 
                     //  alert(movPos.lat.toString() +" "+ movPos.lng.toString());
-                    redraw();
+                    redraw(function(){
+                      //al terminar
+                      setTimeout(iniciarMonitoreo, 1000);
+
+                    });
 
                     //i++;
                     //  if( i < n ){
-                    setTimeout(iniciarMovimiento, 1000);
+                    //setTimeout(iniciarMonitoreo, 1000);
                     //  }
                 }
 

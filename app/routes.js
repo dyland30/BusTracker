@@ -13,6 +13,15 @@ module.exports = function(app, passport, acl, mongoose, express) {
     var userCtrl = require('./controllers/UserController.js');
 
 
+    //no cache
+    function nocache(req, res, next) {
+      res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.header('Expires', '-1');
+      res.header('Pragma', 'no-cache');
+      next();
+    }
+
+
     // =====================================
     // HOME PAGE (with login links) ========
     // =====================================
@@ -72,15 +81,11 @@ module.exports = function(app, passport, acl, mongoose, express) {
     // =====================================
     // TRACKING SECTION =====================
     // =====================================
-    app.get('/tracking', isLoggedIn, function(req, res) {
+    app.get('/tracking', isLoggedIn,nocache, function(req, res) {
         res.render('../public/views/tracking.ejs', {
             user: req.user // get the user out of session and pass to template
         });
     });
-
-
-
-
 
     // =====================================
     // LOGOUT ==============================
@@ -142,6 +147,8 @@ module.exports = function(app, passport, acl, mongoose, express) {
     routerApi.route('/unidad').get(unidadCtrl.findAll).post(unidadCtrl.add);
     //
     routerApi.route('/unidad/:id').get(unidadCtrl.findById).put(unidadCtrl.update).delete(unidadCtrl.delete);
+    routerApi.route('/unidad/updatelocation/:id').put(unidadCtrl.);
+
 
     //obtener unidades por organizacion
     routerApi.route('/organizacion/unidad/:idOrganizacion').get(unidadCtrl.findByOrganizacion);
