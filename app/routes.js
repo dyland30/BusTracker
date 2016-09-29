@@ -143,7 +143,7 @@ module.exports = function(app, passport, acl, mongoose, express) {
     //
     routerApi.route('/unidad/:id').get(unidadCtrl.findById).put(unidadCtrl.update).delete(unidadCtrl.delete);
 
-    //obtener organizaciones por unidades
+    //obtener unidades por organizacion
     routerApi.route('/organizacion/unidad/:idOrganizacion').get(unidadCtrl.findByOrganizacion);
 
     routerApi.route('/historial').get(unidadHistorialCtrl.findAll).post(unidadHistorialCtrl.add);

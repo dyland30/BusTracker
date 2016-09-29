@@ -1,135 +1,167 @@
 <!-- views/index.ejs -->
 <!doctype html>
 <html>
+
 <head>
     <% include partials/head %>
 </head>
+
 <body>
-  <header>
-    <% include partials/header %>
-    <style media="screen">
-      #map { height: 100% }
-    </style>
+    <header>
+        <% include partials/header %>
+            <style media="screen">
+                #map {
+                    height: 100%
+                }
+            </style>
 
-  </header>
-  <main>
-    <script src="js/trackingApp.js" ></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfaLOJAefzXT75bIWgxd8RmcWz5rWbMec&signed_in=true">
-    </script>
+    </header>
+    <main>
+        <script src="js/trackingApp.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfaLOJAefzXT75bIWgxd8RmcWz5rWbMec&signed_in=true">
+        </script>
 
-    <div class="container" ng-app="trackingApp" ng-controller="MainController">
+        <div class="container" ng-app="trackingApp" ng-controller="MainController">
+
+            <h6>{{usuario.local.email}}</h6>
+            <h3>{{organizacion.razon_social}}</h3>
+            <!-- Opciones de Filtro -->
+            <div class="panel panel-default">
+                <div class="form form-inline">
+                    <div class="form-group">
+                        <label for="cmbUnidad">Unidad:</label>
+                        <select id="cmbUnidad" class="form-control" style="width: 250px" ng-options="unidad.properties.identificador for unidad in listaUnidades track by unidad.id" ng-model="unidadSeleccionada" ng-change="cmbUnidadChange()">
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="iniciar" class="form-control" name="iniciar" onclick="iniciarMovimiento()">Iniciar Movimiento</button>
+                    </div>
+
+                </div>
+
+            </div>
+            <!-- MAPA-->
+            <div class="panel panel-default" style="height:700px">
+                <div id="map">
+
+                </div>
+
+            </div>
 
 
-      <h6>{{usuario.local.email}}</h6>
-      <h3>{{organizacion.razon_social}}</h3>
-      <!-- Opciones de Filtro -->
-      <div class="panel panel-default">
-        Seleccionar Unidad : <select class="" name=""><option/> </select> <button type="iniciar" name="iniciar" onclick="iniciarMovimiento()">Iniciar Movimiento</button>
-        {{5+5}}
-      </div>
-      <!-- MAPA-->
-      <div class="panel panel-default" style="height:700px">
-        <div id="map">
+            <script type="text/javascript">
+                // obtener usuario de session
+                var map;
+
+                var listaMarcadores =[];
+
+
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: {
+                        lat: -7.16,
+                        lng: -78.51
+                    },
+                    zoom: 14
+                });
+
+                // capa de trafico
+                var transitLayer = new google.maps.TransitLayer();
+                transitLayer.setMap(map);
+
+
+                var infoWindow = new google.maps.InfoWindow({
+                    map: map
+                });
+
+
+                // Try HTML5 geolocation.
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        var pos = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+
+                        infoWindow.setPosition(pos);
+                        infoWindow.setContent('Location found.');
+                        map.setCenter(pos);
+
+                    }, function() {
+                        handleLocationError(true, infoWindow, map.getCenter());
+                    });
+                } else {
+                    // Browser doesn't support Geolocation
+                    handleLocationError(false, infoWindow, map.getCenter());
+                }
+
+                //crear marcadores
+
+                //obtener unidades
+                window.onload = function() {
+                    redraw();
+                };
+
+
+                function redraw() {
+                    /*map.setCenter({
+                        lat: movPos.lat,
+                        lng: movPos.lng,
+                        alt: 0
+                    }); */
+                    //remover marcadores
+
+                    listaMarcadores = [];
+                    //marker.setPosition(movPos);
+                    var unidades =  angular.element(document.querySelector('[ng-controller="MainController"]')).scope().listaUnidades;
+
+                    unidades.forEach(function(unidad){
+                      var movPos = {
+                          lat: unidad.geometry.coordinates[0],
+                          lng: unidad.geometry.coordinates[1]
+                      };
+
+                      var marker = new google.maps.Marker({
+                          position: movPos,
+                          map: map,
+                          title: unidad.properties.identificador
+                      });
+                      listaMarcadores.push(marker);
+
+                    });
+
+
+
+                }
+
+                //bucle recursivo para asegurar que funcione el setTimeout
+                //var i = 0, n = 100;
+                function iniciarMovimiento() {
+                    movPos.lat += 0.01;
+                    movPos.lng += 0.01;
+
+                    //  alert(movPos.lat.toString() +" "+ movPos.lng.toString());
+                    redraw();
+
+                    //i++;
+                    //  if( i < n ){
+                    setTimeout(iniciarMovimiento, 1000);
+                    //  }
+                }
+
+                function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+                    infoWindow.setPosition(pos);
+                    infoWindow.setContent(browserHasGeolocation ? 'Error: The Geolocation service failed.' :
+                        'Error: Your browser doesn\'t support geolocation.');
+                }
+            </script>
 
         </div>
-
-      </div>
-    </div>
-  </main>
-  <footer>
-    <% include partials/footer %>
-  </footer>
-
-
-  <script type="text/javascript">
-
-  // obtener usuario de session
-
-
-
-  var map;
-  var marker;
-  var movPos = {lat:-7.161709, lng:-78.509672};
-
-  var movPos2 = {lat:-7.161709, lng:-78.509672};
-
-  map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: -7.16, lng: -78.51},
-      zoom: 14
-    });
-
-// capa de trafico
-var transitLayer = new google.maps.TransitLayer();
-transitLayer.setMap(map);
-
-
-    var infoWindow = new google.maps.InfoWindow({map: map});
-
-
-    // Try HTML5 geolocation.
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position) {
-        var pos = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        };
-
-        infoWindow.setPosition(pos);
-        infoWindow.setContent('Location found.');
-        map.setCenter(pos);
-
-      }, function() {
-        handleLocationError(true, infoWindow, map.getCenter());
-      });
-    } else {
-      // Browser doesn't support Geolocation
-        handleLocationError(false, infoWindow, map.getCenter());
-    }
-
-// marcadores
-marker = new google.maps.Marker({
-    position: movPos,
-    map: map,
-    title: 'Marcador simple!'
-  });
-marker2 = new google.maps.Marker({
-  position:movPos2,
-  map:map,
-  title:'Marcador 2'
-});
-
-
-function redraw(){
-  map.setCenter({lat: movPos.lat, lng : movPos.lng, alt: 0})
-  marker.setPosition(movPos);
-  marker2.setPosition(movPos2);
-}
-
-//bucle recursivo para asegurar que funcione el setTimeout
-//var i = 0, n = 100;
-function iniciarMovimiento() {
-    movPos.lat += 0.01;
-    movPos.lng +=0.01;
-
-    movPos2.lat += 0.01;
-
-  //  alert(movPos.lat.toString() +" "+ movPos.lng.toString());
-    redraw();
-
-    //i++;
-  //  if( i < n ){
-        setTimeout(iniciarMovimiento, 1000 );
-  //  }
-}
-
-function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-    infoWindow.setPosition(pos);
-    infoWindow.setContent(browserHasGeolocation ? 'Error: The Geolocation service failed.' :
-                      'Error: Your browser doesn\'t support geolocation.');
-}
-  </script>
-
-
+    </main>
+    <footer>
+        <% include partials/footer %>
+    </footer>
 
 </body>
+
 </html>
