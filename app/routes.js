@@ -129,6 +129,7 @@ module.exports = function(app, passport, acl, mongoose, express) {
     //rutas de control de accesos
     // Setting a new role
     app.get('/allow/:user/:role', isLoggedIn, acl.middleware(1, get_user_id), function(request, response) {
+    //app.get('/allow/:user/:role', isLoggedIn, function(request, response) {
         acl.addUserRoles(request.params.user, request.params.role);
         response.send(request.params.user + ' is a ' + request.params.role);
     });
@@ -151,6 +152,7 @@ module.exports = function(app, passport, acl, mongoose, express) {
     //usuario logueado
     routerApi.route('/user').get(userCtrl.getUserSession);
 
+    //usuario
     //lista completa de unidades
     routerApi.route('/unidad').get(unidadCtrl.findAll).post(unidadCtrl.add);
     //

@@ -26,9 +26,49 @@
                 });
             };
 
-            //poblar datos
+            $scope.mostrarEditarPopup = function(unidad) {
+              alert(unidad.properties.identificador);
+
+            }
+
+            $scope.mostrarCrearPopup = function() {
+              //alert("crear");
+              var modalCrear = $uibModal.open({
+                animation:true,
+                templateUrl:'popupCrearUnidad.html',
+                controller: 'popupCrearCtrl',
+                resolve: {}
+
+              });
+
+              modalCrear.result.then(function(unidad){
+                alert(unidad);
+
+              });
+
+
+            };
+
+
+
+            //iniciar
             $scope.poblarDatos();
 
-        }]);
+
+        }]).controller("popupCrearCtrl",function($scope, $http, $uibModalInstance){
+            $scope.unidad = {};
+
+            $scope.guardar = function(){
+
+              $uibModalInstance.close($scope.unidad.properties.identificador);
+
+            }
+            $scope.cancelar = function () {
+              $uibModalInstance.dismiss();
+            }
+
+        });
+
+
 
 })();

@@ -12,7 +12,7 @@ exports.findAll = function(req, res) {
 
 //buscar por organizacion
 exports.findByOrganizacion = function(req, res) {
-    Unidad.where('properties.idOrganizacion', req.params.idOrganizacion).exec(function(err, unidades) {
+    Unidad.where('properties.idOrganizacion', req.params.idOrganizacion).populate('properties.asignado').exec(function(err, unidades) {
         if (err) return res.send(500, err.message);
         console.log('GET /organizacion/unidades')
         res.status(200).jsonp(unidades);
@@ -26,7 +26,7 @@ exports.findById = function(req, res) {
 
         console.log('GET /unidad/' + req.params.id);
         res.status(200).jsonp(unidad);
-    });
+    }).populate('properties.asignado');
 };
 
 //POST - Insert a new unidad in the DB
