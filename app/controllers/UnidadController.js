@@ -59,7 +59,7 @@ exports.update = function(req, res) {
 };
 
 //ACTUALIZAR SOLO LATITUD Y longitud
-exports.updatePosition = function(req,res){
+exports.updateLocation = function(req,res){
   Unidad.findById(req.params.id, function(err, unidad) {
       unidad.geometry.coordinates = req.body.coordinates;
       unidad.save(function(err) {

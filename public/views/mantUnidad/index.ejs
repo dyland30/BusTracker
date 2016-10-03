@@ -1,0 +1,59 @@
+<!-- views/index.ejs -->
+<!doctype html>
+<html>
+<head>
+    <% include ../partials/head %>
+</head>
+<body>
+  <header>
+    <% include ../partials/header %>
+  </header>
+  <main>
+    <script src="../js/comun.js"></script>
+    <script src="../js/mantUnidadApp.js"></script>
+
+    <div class="container" ng-app="MantUnidadApp" ng-controller ="MainController">
+      <span us-spinner="{radius:30, width:8, length: 16}"></span>
+      <h6>{{usuario.local.email}}</h6>
+      <h3>{{organizacion.razon_social}}</h3>
+      <!-- -->
+      <h4>Lista de Unidades</h4>
+      <button type="button" name="btnNuevo" class="btn btn-success"><span class="fa fa-plus"></span> Nueva Unidad</button>
+      <hr/>
+      <table class="table table-bordered table-hover table-condensed">
+        <thead>
+          <tr>
+            <th>
+              Unidad
+            </th>
+            <th>
+              Tipo
+            </th>
+            <th>
+              Acciones
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat ="u in listaUnidades">
+            <td>
+              {{u.properties.identificador}}
+            </td>
+            <td>
+              {{u.properties.tipo}}
+            </td>
+            <td>
+            <button type="button" name="btnEditar" class="btn btn-primary"><span class="fa fa-pencil-square-o"></span> Editar</button>
+            <button type="button" name="btnEliminar" class="btn btn-danger"><span class="fa fa-times"></span> Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+
+  </main>
+  <footer>
+    <% include ../partials/footer %>
+  </footer>
+</body>
+</html>

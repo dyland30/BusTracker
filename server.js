@@ -56,7 +56,7 @@ mongoose.connect(process.env.DB_URI, function(err, res) {
       {
           roles:['sysadmin'],
           allows:[
-              {resources:['/profile','/signup','/login','/api','/mantOrganizacion','/allow','/disallow'], permissions:['get','put','post','delete']}
+              {resources:['/profile','/signup','/login','/api','/mantOrganizacion','/allow','/disallow','/unidad'], permissions:['get','put','post','delete']}
           ]
       },
       {

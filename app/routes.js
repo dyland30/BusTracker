@@ -118,6 +118,14 @@ module.exports = function(app, passport, acl, mongoose, express) {
 
     });
 
+    //REVISAR COMO ASIGNAR PERMISOS EN ACL
+    //app.get('/unidad',isLoggedIn, acl.middleware(1,get_user_id),function(req,res){
+    app.get('/unidad',isLoggedIn,function(req,res){
+      res.render('../public/views/mantUnidad/index.ejs',{
+        user: req.user
+      });
+    });
+
     //rutas de control de accesos
     // Setting a new role
     app.get('/allow/:user/:role', isLoggedIn, acl.middleware(1, get_user_id), function(request, response) {
@@ -147,7 +155,7 @@ module.exports = function(app, passport, acl, mongoose, express) {
     routerApi.route('/unidad').get(unidadCtrl.findAll).post(unidadCtrl.add);
     //
     routerApi.route('/unidad/:id').get(unidadCtrl.findById).put(unidadCtrl.update).delete(unidadCtrl.delete);
-    routerApi.route('/unidad/updatelocation/:id').put(unidadCtrl.);
+    routerApi.route('/unidad/updatelocation/:id').put(unidadCtrl.updateLocation);
 
 
     //obtener unidades por organizacion

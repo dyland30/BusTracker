@@ -1,12 +1,14 @@
 (function() {
     'use strict';
 
-    angular.module('trackingApp', []).controller('MainController', function($scope, $http) {
-        $scope.organizacion = {};
-        $scope.usuario = {};
-        $scope.listaUnidades = [];
+    angular.module('ComunApp', []).service('comun', function($http) {
+        var comunObj = {};
+        var _usuario = {}; // metodos privados
+        var _organizacion = {};
+        var _mensajeError = "";
+        var _listaUnidades = {};
 
-        $scope.obtenerUsuario = function() {
+        comunObj.obtenerUsuario = function(callback) {
 
             $http({
                 method: "GET",
@@ -16,20 +18,16 @@
                 }
             }).then(function mySucces(response) {
 
-                $scope.usuario = response.data;
-                $scope.obtenerOrganizacion($scope.usuario.idOrganizacion);
-                //obtener unidades
-                $scope.obtenerUnidadesOrganizacion($scope.usuario.idOrganizacion, function() {});
+                _usuario = response.data;
+                callback(_usuario);
+
             }, function myError(response) {
-                $scope.mensajeError = response.statusText;
+                _mensajeError = response.statusText;
+                callback(_usuario);
             });
         };
 
-
-
-
-        $scope.obtenerOrganizacion = function(idOrganizacion) {
-            //
+        comunObj.obtenerOrganizacion = function(idOrganizacion, callback) {
             $http({
                 method: "GET",
                 url: "api/organizacion/" + idOrganizacion,
@@ -38,16 +36,20 @@
                 }
             }).then(function mySucces(response) {
 
-                $scope.organizacion = response.data;
+                _organizacion = response.data;
+                callback(_organizacion);
 
             }, function myError(response) {
-                $scope.mensajeError = response.statusText;
+                _mensajeError = response.statusText;
+                callback(_organizacion);
             });
+
 
         };
 
+
         //obtener todas las unidades de la organizacion
-        $scope.obtenerUnidadesOrganizacion = function(idOrganizacion, callback) {
+        comunObj.obtenerUnidadesOrganizacion = function(idOrganizacion, callback) {
 
             //evitar que se repita la peticion
 
@@ -59,7 +61,6 @@
                 currentdate.getMinutes() + "" +
                 currentdate.getSeconds();
 
-
             var nocache = Math.floor(Math.random() * 9999);
             $http({
                 method: "GET",
@@ -69,20 +70,22 @@
                 }
             }).then(function mySucces(response) {
 
-                $scope.listaUnidades = response.data;
+                _listaUnidades = response.data;
                 //  alert(response.data);
-                callback();
+                callback(_listaUnidades);
 
 
             }, function myError(response) {
                 $scope.mensajeError = response.statusText;
-                callback();
+                callback(_listaUnidades);
             });
         };
 
-        // obtener usuario
-        $scope.obtenerUsuario();
 
+
+
+
+        return comunObj;
 
     });
 
