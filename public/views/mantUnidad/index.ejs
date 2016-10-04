@@ -58,19 +58,17 @@
                         </td>
                         <td>
                             <button type="button" name="btnEditar" class="btn btn-primary" ng-click="mostrarEditarPopup(u)"><span class="fa fa-pencil-square-o"></span> Editar</button>
-                            <button type="button" name="btnEliminar" class="btn btn-danger"><span class="fa fa-times"></span> Eliminar</button>
+                            <button type="button" name="btnEliminar" class="btn btn-danger" ng-click="mostrarEliminarPopup(u)"><span class="fa fa-times"></span> Eliminar</button>
                         </td>
                     </tr>
                 </tbody>
             </table>
 
-
-
             <!-- TEMPLATES-->
             <!-- Crear Unidad-->
             <script type="text/ng-template" id="popupCrearUnidad.html">
                 <div class="modal-header">
-                    <h3 class="modal-title">Crear nueva unidad</h3>
+                    <h3 class="modal-title">{{titulo}}</h3>
                 </div>
                 <div class="modal-body">
 
@@ -109,13 +107,27 @@
                   <button type="button" name="btnGuardarUnidad" class="btn btn-primary" ng-click="guardar()"><span class="fa fa-floppy-o"></span> Guardar</button>
                   <button type="button" name="btncancelar" class="btn btn-warning" ng-click="cancelar()"><span class="fa fa-times"></span> Cancelar</button>
                 </div>
-
             </script>
 
 
+            <!-- Eliminar Unidad -->
+            <script type="text/ng-template" id="popupEliminar.html">
+                <div class="modal-header">
+                    <h3 class="modal-title">Eliminar Unidad</h3>
+                </div>
+                <div class="modal-body">
 
+                    <div class="panel">
+                      <h3>¿Realmente desea eliminar la unidad {{unidad.properties.identificador}}?</h3>
+                    </div>
 
+                </div>
+                <div class="modal-footer">
+                  <button type="button" name="btnGuardarUnidad" class="btn btn-danger" ng-click="eliminar()"><span class="fa fa-floppy-o"></span> Guardar</button>
+                  <button type="button" name="btncancelar" class="btn btn-success" ng-click="cancelar()"><span class="fa fa-times"></span> Cancelar</button>
+                </div>
 
+            </script>
 
 
 

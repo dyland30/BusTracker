@@ -84,30 +84,80 @@
 
         //guardar unidad
 
-        comunObj.guardarUnidad = function(unidad,callback){
-          $http({
-              method: "POST",
-              url: "api/unidad/",
-              headers: {
-                  'Content-Type': 'application/json; charset=utf-8'
-              },
-              data: angular.toJson(unidad)
-          }).then(function mySucces(response) {
+        comunObj.guardarUnidad = function(unidad, callback) {
 
-              _unidad = response.data;
-              //  alert(response.data);
-              callback(_unidad);
+            $http({
+                method: "POST",
+                url: "api/unidad/",
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                },
+                data: angular.toJson(unidad)
+            }).then(function mySucces(response) {
+
+                _unidad = response.data;
+                //  alert(response.data);
+                callback(_unidad);
 
 
-          }, function myError(response) {
-              $scope.mensajeError = response.statusText;
-              callback(_unidad);
-          });
+            }, function myError(response) {
+                $scope.mensajeError = response.statusText;
+                callback(_unidad);
+            });
 
         };
 
+        //obtener Unidad por Id
+        comunObj.obtenerUnidadId = function(id, callback) {
+            $http({
+                method: "GET",
+                url: "api/unidad/" + id,
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }).then(function mySucces(response) {
+
+                _unidad = response.data;
+                //  alert(response.data);
+                callback(_unidad);
 
 
+            }, function myError(response) {
+                $scope.mensajeError = response.statusText;
+                callback(_unidad);
+            });
+
+        };
+
+        //editar unidad
+        comunObj.editarUnidad = function(unidad, callback) {
+
+            //obtener unidad por id
+            comunObj.obtenerUnidadId(unidad._id, function(und) {
+                //solo actualizar sus propiedades no la geometria
+                und.properties = unidad.properties;
+
+                $http({
+                    method: "PUT",
+                    url: "api/unidad/" + unidad._id,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    data: angular.toJson(und)
+                }).then(function mySucces(response) {
+
+                    _unidad = response.data;
+                    //  alert(response.data);
+                    callback(_unidad);
+
+                }, function myError(response) {
+                    $scope.mensajeError = response.statusText;
+                    callback(_unidad);
+                });
+
+            });
+
+        };
 
 
         return comunObj;

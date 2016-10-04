@@ -31,10 +31,6 @@
                 });
             };
 
-            $scope.mostrarEditarPopup = function(unidad) {
-                alert(unidad.properties.identificador);
-
-            }
 
             $scope.mostrarCrearPopup = function() {
                 //alert("crear");
@@ -45,15 +41,68 @@
                     resolve: {
                         idOrg: function() {
                             return $scope.usuario.idOrganizacion;
+                        },
+                        operacion: function(){
+                          return "agregar";
+                        },
+                        unidad: function(){
+                          return {};//objeto en blanco
                         }
                     }
 
                 });
 
                 modalCrear.result.then(function(unidad) {
-                    alert(unidad._id);
+                    //alert(unidad._id);
+                    $scope.poblarDatos();
 
                 });
+
+            };
+
+            $scope.mostrarEditarPopup = function(unidad) {
+              var modalCrear = $uibModal.open({
+                  animation: true,
+                  templateUrl: 'popupCrearUnidad.html',
+                  controller: 'popupCrearCtrl',
+                  resolve: {
+                      idOrg: function() {
+                          return $scope.usuario.idOrganizacion;
+                      },
+                      operacion: function(){
+                        return "editar";
+                      },
+                      unidad: function(){
+                        return unidad;//objeto en blanco
+                      }
+                  }
+
+              });
+              modalCrear.result.then(function(und) {
+                  //alert(unidad._id);
+                  $scope.poblarDatos();
+
+              });
+
+            };
+
+            $scope.mostrarEliminarPopup = function(unidad){
+              var modalEliminar = $uibModal.open({
+                  animation: true,
+                  templateUrl: 'popupEliminar.html',
+                  controller: 'popupEliminarCtrl',
+                  resolve: {
+                        unidad: function(){
+                        return unidad;//objeto en blanco
+                      }
+                  }
+
+              });
+              modalEliminar.result.then(function(und) {
+                  //alert(unidad._id);
+                  $scope.poblarDatos();
+
+              });
 
             };
 
@@ -61,27 +110,51 @@
             $scope.poblarDatos();
 
         }
-    ]).controller("popupCrearCtrl", function($scope, $http, $uibModalInstance, idOrg, comun) {
-        $scope.unidad = {};
+    ]).controller("popupCrearCtrl", function($scope, $http, $uibModalInstance, idOrg,operacion,unidad, comun) {
+        $scope.unidad = unidad;
+        $scope.titulo = "Editar Unidad";
         $scope.fecha = new Date();
+        if(operacion=="agregar"){
+          $scope.unidad.properties = {};
+          $scope.unidad.properties.fch_inicio = $scope.fecha;
+          $scope.titulo = "Crear Unidad"
+        }
 
         $scope.guardar = function() {
             //completar objeto
-            $scope.unidad.properties.estado = "D";
-            $scope.unidad.properties.idOrganizacion = idOrg;
-            $scope.unidad.geometry={}
-            $scope.unidad.geometry.type='Point'
-            $scope.unidad.geometry.coordinates = [0, 0];
+            if(operacion=="agregar"){
+              $scope.unidad.properties.estado = "D";
+              $scope.unidad.properties.idOrganizacion = idOrg;
+              $scope.unidad.geometry={}
+              $scope.unidad.geometry.type='Point'
+              $scope.unidad.geometry.coordinates = [0, 0];
 
-            comun.guardarUnidad($scope.unidad, function(_und) {
-                //alert(_und.id);
-                $uibModalInstance.close(_und);
-            });
+              comun.guardarUnidad($scope.unidad, function(_und) {
+                  //alert(_und.id);
+                  $uibModalInstance.close(_und);
+              });
+            } else if(operacion=="editar"){
+              //Editar
+              comun.editarUnidad($scope.unidad,function(_und){
+                  $uibModalInstance.close(_und);
+              });
+
+            }
 
         }
         $scope.cancelar = function() {
             $uibModalInstance.dismiss();
         }
+
+    }).controller("popupEliminarCtrl",function($scope,$http,$uibModalInstance,unidad,comun){
+      $scope.unidad=unidad;
+
+      $scope.eliminar = function(){
+          $scope.unidad.estado="E"; // e de eliminado
+          comun.editarUnidad($scope.unidad,function(_und){
+            $uibModalInstance.close(_und);
+          });
+      };
 
     });
 
