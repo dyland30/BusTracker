@@ -1,8 +1,13 @@
 (function() {
     'use strict';
 
-    angular.module('MantUnidadApp', ['ui.bootstrap', 'ngLoadingSpinner', 'ComunApp'])
-        .controller('MainController', ['$scope', '$http', '$filter', '$uibModal', 'comun', function($scope, $http, $filter, $uibModal, comun) {
+    angular.module('MantUnidadApp', ['ui.bootstrap', 'ngLoadingSpinner', 'ComunApp']).controller('MainController', [
+        '$scope',
+        '$http',
+        '$filter',
+        '$uibModal',
+        'comun',
+        function($scope, $http, $filter, $uibModal, comun) {
             //usuario y compañía
 
             $scope.usuario = {};
@@ -27,48 +32,57 @@
             };
 
             $scope.mostrarEditarPopup = function(unidad) {
-              alert(unidad.properties.identificador);
+                alert(unidad.properties.identificador);
 
             }
 
             $scope.mostrarCrearPopup = function() {
-              //alert("crear");
-              var modalCrear = $uibModal.open({
-                animation:true,
-                templateUrl:'popupCrearUnidad.html',
-                controller: 'popupCrearCtrl',
-                resolve: {}
+                //alert("crear");
+                var modalCrear = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'popupCrearUnidad.html',
+                    controller: 'popupCrearCtrl',
+                    resolve: {
+                        idOrg: function() {
+                            return $scope.usuario.idOrganizacion;
+                        }
+                    }
 
-              });
+                });
 
-              modalCrear.result.then(function(unidad){
-                alert(unidad);
+                modalCrear.result.then(function(unidad) {
+                    alert(unidad._id);
 
-              });
-
+                });
 
             };
-
-
 
             //iniciar
             $scope.poblarDatos();
 
+        }
+    ]).controller("popupCrearCtrl", function($scope, $http, $uibModalInstance, idOrg, comun) {
+        $scope.unidad = {};
+        $scope.fecha = new Date();
 
-        }]).controller("popupCrearCtrl",function($scope, $http, $uibModalInstance){
-            $scope.unidad = {};
+        $scope.guardar = function() {
+            //completar objeto
+            $scope.unidad.properties.estado = "D";
+            $scope.unidad.properties.idOrganizacion = idOrg;
+            $scope.unidad.geometry={}
+            $scope.unidad.geometry.type='Point'
+            $scope.unidad.geometry.coordinates = [0, 0];
 
-            $scope.guardar = function(){
+            comun.guardarUnidad($scope.unidad, function(_und) {
+                //alert(_und.id);
+                $uibModalInstance.close(_und);
+            });
 
-              $uibModalInstance.close($scope.unidad.properties.identificador);
+        }
+        $scope.cancelar = function() {
+            $uibModalInstance.dismiss();
+        }
 
-            }
-            $scope.cancelar = function () {
-              $uibModalInstance.dismiss();
-            }
-
-        });
-
-
+    });
 
 })();

@@ -7,6 +7,7 @@
         var _organizacion = {};
         var _mensajeError = "";
         var _listaUnidades = {};
+        var _unidad = {};
 
         comunObj.obtenerUsuario = function(callback) {
 
@@ -79,6 +80,30 @@
                 $scope.mensajeError = response.statusText;
                 callback(_listaUnidades);
             });
+        };
+
+        //guardar unidad
+
+        comunObj.guardarUnidad = function(unidad,callback){
+          $http({
+              method: "POST",
+              url: "api/unidad/",
+              headers: {
+                  'Content-Type': 'application/json; charset=utf-8'
+              },
+              data: angular.toJson(unidad)
+          }).then(function mySucces(response) {
+
+              _unidad = response.data;
+              //  alert(response.data);
+              callback(_unidad);
+
+
+          }, function myError(response) {
+              $scope.mensajeError = response.statusText;
+              callback(_unidad);
+          });
+
         };
 
 

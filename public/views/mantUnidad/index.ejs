@@ -74,32 +74,32 @@
                 </div>
                 <div class="modal-body">
 
-                    <div class="row">
+                    <div class="panel">
                       <div class="form-group">
                         <label for="txtIdentificador">Denominación Unidad</label>
                         <input type="text" name="txtIdentificador" id="txtIdentificador" class="form-control" ng-model="unidad.properties.identificador">
                       </div>
                       <div class="form-group">
                         <label for="txtPlaca">Matricula</label>
-                        <input type="text" name="txtPlaca" id="txtPlaca" class="form-control">
+                        <input type="text" name="txtPlaca" id="txtPlaca" class="form-control" ng-model="unidad.properties.placa">
                       </div>
                       <div class="form-group">
                         <label for="cmbTipo">Tipo</label>
-                        <select class="form-control" name="cmbTipo" id="cmbTipo">
-                            <option value="Bus">Auto</option>
+                        <select class="form-control" name="cmbTipo" id="cmbTipo" ng-model ="unidad.properties.tipo">
+                            <option value="Auto">Auto</option>
                             <option value="Bus">Bus</option>
-                            <option value="Bus">Camion</option>
-                            <option value="Bus">Motocicleta</option>
-                            <option value="Bus">Bicicleta</option>
+                            <option value="Camion">Camion</option>
+                            <option value="Motocicleta">Motocicleta</option>
+                            <option value="Bicicleta">Bicicleta</option>
                         </select>
                       </div>
                       <div class="form-group">
                         <label for="txtAsignadoId">Usuario Asignado</label>
-                        <input type="text" name="txtAsignadoId" id="txtAsignadoId" class="form-control">
+                        <input type="text" name="txtAsignadoId" id="txtAsignadoId" class="form-control" ng-model="unidad.properties.asignado">
                       </div>
                       <div class="form-group">
                         <label for="txtFecharegistro">Fecha de Registro</label>
-                        <input type="text" name="txtFecharegistro" id="txtFecharegistro" class="form-control">
+                        <input type="text" name="txtFecharegistro" id="txtFecharegistro" class="form-control" ng-value="fecha | date: 'dd/MM/yyyy' " disabled="disabled">
                       </div>
 
                     </div>
