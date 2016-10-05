@@ -4,16 +4,28 @@ var Unidad = mongoose.model('Unidad');
 //GET - Return all unidades in the DB
 exports.findAll = function(req, res) {
     Unidad.find(function(err, unidades) {
-        if (err) res.send(500, err.message);
+        if (err)
+            res.send(500, err.message);
         console.log('GET /unidades')
         res.status(200).jsonp(unidades);
     });
 };
 
-//buscar por organizacion
+//buscar por organizacion y solo unidades activas
 exports.findByOrganizacion = function(req, res) {
-    Unidad.where('properties.idOrganizacion', req.params.idOrganizacion).populate('properties.asignado').exec(function(err, unidades) {
-        if (err) return res.send(500, err.message);
+    Unidad.find({
+        $and: [
+            {
+                'properties.idOrganizacion' : req.params.idOrganizacion
+            }, {
+                'properties.estado': {
+                    $ne: 'E'
+                }
+            }
+        ]
+    }).populate('properties.asignado').exec(function(err, unidades) {
+        if (err)
+            return res.send(500, err.message);
         console.log('GET /organizacion/unidades')
         res.status(200).jsonp(unidades);
     });
@@ -22,7 +34,8 @@ exports.findByOrganizacion = function(req, res) {
 //GET - Return a unidad with specified ID
 exports.findById = function(req, res) {
     Unidad.findById(req.params.id, function(err, unidad) {
-        if (err) return res.send(500, err.message);
+        if (err)
+            return res.send(500, err.message);
 
         console.log('GET /unidad/' + req.params.id);
         res.status(200).jsonp(unidad);
@@ -34,13 +47,11 @@ exports.add = function(req, res) {
     console.log('POST');
     console.log(req.body);
 
-    var unidad = new Unidad({
-        properties: req.body.properties,
-        geometry: req.body.geometry
-    });
+    var unidad = new Unidad({properties: req.body.properties, geometry: req.body.geometry});
 
     unidad.save(function(err, unidad) {
-        if (err) return res.send(500, err.message);
+        if (err)
+            return res.send(500, err.message);
         res.status(200).jsonp(unidad);
     });
 };
@@ -52,28 +63,31 @@ exports.update = function(req, res) {
         unidad.geometry = req.body.geometry;
 
         unidad.save(function(err) {
-            if (err) return res.send(500, err.message);
+            if (err)
+                return res.send(500, err.message);
             res.status(200).jsonp(unidad);
         });
     });
 };
 
 //ACTUALIZAR SOLO LATITUD Y longitud
-exports.updateLocation = function(req,res){
-  Unidad.findById(req.params.id, function(err, unidad) {
-      unidad.geometry.coordinates = req.body.coordinates;
-      unidad.save(function(err) {
-          if (err) return res.send(500, err.message);
-          res.status(200).jsonp(unidad);
-      });
-  });
+exports.updateLocation = function(req, res) {
+    Unidad.findById(req.params.id, function(err, unidad) {
+        unidad.geometry.coordinates = req.body.coordinates;
+        unidad.save(function(err) {
+            if (err)
+                return res.send(500, err.message);
+            res.status(200).jsonp(unidad);
+        });
+    });
 };
 
 //DELETE - Delete a unidad with specified ID
 exports.delete = function(req, res) {
     Unidad.findById(req.params.id, function(err, unidad) {
         unidad.remove(function(err) {
-            if (err) return res.send(500, err.message);
+            if (err)
+                return res.send(500, err.message);
             res.status(200).jsonp(unidad);
         });
     });

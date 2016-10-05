@@ -141,7 +141,7 @@
 
             }
 
-        }
+        };
         $scope.cancelar = function() {
             $uibModalInstance.dismiss();
         }
@@ -150,11 +150,14 @@
       $scope.unidad=unidad;
 
       $scope.eliminar = function(){
-          $scope.unidad.estado="E"; // e de eliminado
+          $scope.unidad.properties.estado="E"; // e de eliminado
           comun.editarUnidad($scope.unidad,function(_und){
             $uibModalInstance.close(_und);
           });
       };
+      $scope.cancelar = function() {
+          $uibModalInstance.dismiss();
+      }
 
     });
 
