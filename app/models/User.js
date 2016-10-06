@@ -38,7 +38,8 @@ var userSchema = mongoose.Schema({
     roles: {
         type: [String],
         defalut: 'user'
-    } //  user,companyAdmin, sysadmin
+    },//  user,companyAdmin, sysadmin
+    estado: String // A -> Activo, E -> Eliminado
 });
 
 // methods ======================

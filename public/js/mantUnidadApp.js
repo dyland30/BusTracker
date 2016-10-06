@@ -13,6 +13,7 @@
             $scope.usuario = {};
             $scope.organizacion = {};
             $scope.listaUnidades = [];
+            $scope.listaUsuarios =[];
 
             $scope.poblarDatos = function() {
                 //obtener usuario
@@ -26,6 +27,10 @@
                     comun.obtenerUnidadesOrganizacion(user.idOrganizacion, function(lsUnidades) {
                         $scope.listaUnidades = lsUnidades;
 
+                    });
+                    //obtener usuarios
+                    comun.obtenerUsuariosOrganizacion(user.idOrganizacion,function(lsUsuarios){
+                        $scope.listaUsuarios =lsUsuarios;
                     });
 
                 });
@@ -47,6 +52,9 @@
                         },
                         unidad: function(){
                           return {};//objeto en blanco
+                        },
+                        usuarios: function(){
+                          return $scope.listaUsuarios;
                         }
                     }
 
@@ -74,6 +82,9 @@
                       },
                       unidad: function(){
                         return unidad;//objeto en blanco
+                      },
+                      usuarios: function(){
+                        return $scope.listaUsuarios;
                       }
                   }
 
@@ -110,14 +121,24 @@
             $scope.poblarDatos();
 
         }
-    ]).controller("popupCrearCtrl", function($scope, $http, $uibModalInstance, idOrg,operacion,unidad, comun) {
+    ]).controller("popupCrearCtrl", function($scope, $http, $uibModalInstance, idOrg,operacion,unidad,usuarios, comun) {
         $scope.unidad = unidad;
         $scope.titulo = "Editar Unidad";
         $scope.fecha = new Date();
+        $scope.listaUsuarios =usuarios;
+        $scope.usuarioSeleccionadoId ="";
+
+        //alert($scope.usuarioSeleccionado);
+
         if(operacion=="agregar"){
           $scope.unidad.properties = {};
           $scope.unidad.properties.fch_inicio = $scope.fecha;
+
           $scope.titulo = "Crear Unidad"
+        } else if(operacion=="editar"){
+          if($scope.unidad.properties.asignado != null && $scope.unidad.properties.asignado!=undefined)
+            $scope.usuarioSeleccionadoId =$scope.unidad.properties.asignado._id;
+        //  alert($scope.usuarioSeleccionadoId);
         }
 
         $scope.guardar = function() {
@@ -128,6 +149,7 @@
               $scope.unidad.geometry={}
               $scope.unidad.geometry.type='Point'
               $scope.unidad.geometry.coordinates = [0, 0];
+              $scope.unidad.properties.asignado = $scope.usuarioSeleccionadoId;
 
               comun.guardarUnidad($scope.unidad, function(_und) {
                   //alert(_und.id);
@@ -135,6 +157,8 @@
               });
             } else if(operacion=="editar"){
               //Editar
+
+              $scope.unidad.properties.asignado = $scope.usuarioSeleccionadoId;
               comun.editarUnidad($scope.unidad,function(_und){
                   $uibModalInstance.close(_und);
               });

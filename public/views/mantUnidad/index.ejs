@@ -93,7 +93,10 @@
                       </div>
                       <div class="form-group">
                         <label for="txtAsignadoId">Usuario Asignado</label>
-                        <input type="text" name="txtAsignadoId" id="txtAsignadoId" class="form-control" ng-model="unidad.properties.asignado">
+                        <select class="form-control" name="cmbUsuario" id="cmbUsuario"
+                        ng-options="u.nombres for u in listaUsuarios track by u._id" ng-model ="usuarioSeleccionadoId">
+                        </select>
+
                       </div>
                       <div class="form-group">
                         <label for="txtFecharegistro">Fecha de Registro</label>
@@ -116,11 +119,9 @@
                     <h3 class="modal-title">Eliminar Unidad</h3>
                 </div>
                 <div class="modal-body">
-
                     <div class="panel">
                       <h3 class="text-center">¿Realmente desea eliminar la unidad {{unidad.properties.identificador}}?</h3>
                     </div>
-
                 </div>
                 <div class="modal-footer">
                   <button type="button" name="btnGuardarUnidad" class="btn btn-danger" ng-click="eliminar()"><span class="fa fa-times"></span> Eliminar</button>

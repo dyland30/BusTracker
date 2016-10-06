@@ -8,6 +8,7 @@
         var _mensajeError = "";
         var _listaUnidades = {};
         var _unidad = {};
+        var _listaUsuarios =[];
 
         comunObj.obtenerUsuario = function(callback) {
 
@@ -27,6 +28,27 @@
                 callback(_usuario);
             });
         };
+
+        comunObj.obtenerUsuariosOrganizacion = function(idOrganizacion,callback) {
+
+            $http({
+                method: "GET",
+                url: "api/users/"+idOrganizacion,
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }).then(function mySucces(response) {
+
+                _listaUsuarios = response.data;
+                callback(_listaUsuarios);
+
+            }, function myError(response) {
+                _mensajeError = response.statusText;
+                callback(_listaUsuarios);
+            });
+        };
+
+
 
         comunObj.obtenerOrganizacion = function(idOrganizacion, callback) {
             $http({
