@@ -39,7 +39,8 @@ var userSchema = mongoose.Schema({
         type: [String],
         defalut: 'user'
     },//  user,companyAdmin, sysadmin
-    estado: String // A -> Activo, E -> Eliminado
+    estado: String, // A -> Activo, E -> Eliminado
+    fch_modificado: Date
 });
 
 // methods ======================
