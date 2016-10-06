@@ -94,7 +94,7 @@
                       <div class="form-group">
                         <label for="txtAsignadoId">Usuario Asignado</label>
                         <select class="form-control" name="cmbUsuario" id="cmbUsuario"
-                        ng-options="u.nombres for u in listaUsuarios track by u._id" ng-model ="usuarioSeleccionadoId">
+                        ng-options="u.nombres for u in listaUsuarios track by u._id" ng-model ="usuarioSeleccionado" ng-change="cmbUsuarioChange()">
                         </select>
 
                       </div>
@@ -111,8 +111,6 @@
                   <button type="button" name="btncancelar" class="btn btn-warning" ng-click="cancelar()"><span class="fa fa-times"></span> Cancelar</button>
                 </div>
             </script>
-
-
             <!-- Eliminar Unidad -->
             <script type="text/ng-template" id="popupEliminar.html">
                 <div class="modal-header">
@@ -127,14 +125,8 @@
                   <button type="button" name="btnGuardarUnidad" class="btn btn-danger" ng-click="eliminar()"><span class="fa fa-times"></span> Eliminar</button>
                   <button type="button" name="btncancelar" class="btn btn-success" ng-click="cancelar()"><span class="fa fa-check"></span> Cancelar</button>
                 </div>
-
             </script>
-
-
-
         </div>
-
-
     </main>
     <footer>
         <% include ../partials/footer %>

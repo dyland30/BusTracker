@@ -126,7 +126,7 @@
         $scope.titulo = "Editar Unidad";
         $scope.fecha = new Date();
         $scope.listaUsuarios =usuarios;
-        $scope.usuarioSeleccionadoId ="";
+        $scope.usuarioSeleccionado ={};
 
         //alert($scope.usuarioSeleccionado);
 
@@ -137,9 +137,13 @@
           $scope.titulo = "Crear Unidad"
         } else if(operacion=="editar"){
           if($scope.unidad.properties.asignado != null && $scope.unidad.properties.asignado!=undefined)
-            $scope.usuarioSeleccionadoId =$scope.unidad.properties.asignado._id;
-        //  alert($scope.usuarioSeleccionadoId);
+            $scope.usuarioSeleccionado =$scope.unidad.properties.asignado;
+        //  alert($scope.usuarioSeleccionado);
         }
+        $scope.cmbUsuarioChange= function(){
+          alert($scope.usuarioSeleccionado._id);
+        };
+
 
         $scope.guardar = function() {
             //completar objeto
@@ -149,7 +153,7 @@
               $scope.unidad.geometry={}
               $scope.unidad.geometry.type='Point'
               $scope.unidad.geometry.coordinates = [0, 0];
-              $scope.unidad.properties.asignado = $scope.usuarioSeleccionadoId;
+              $scope.unidad.properties.asignado = $scope.usuarioSeleccionado;
 
               comun.guardarUnidad($scope.unidad, function(_und) {
                   //alert(_und.id);
@@ -158,7 +162,7 @@
             } else if(operacion=="editar"){
               //Editar
 
-              $scope.unidad.properties.asignado = $scope.usuarioSeleccionadoId;
+              $scope.unidad.properties.asignado = $scope.usuarioSeleccionado;
               comun.editarUnidad($scope.unidad,function(_und){
                   $uibModalInstance.close(_und);
               });
