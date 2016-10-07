@@ -35,12 +35,18 @@ var userSchema = mongoose.Schema({
     nombres: String,
     docId: String,
     direccion: [String],
-    roles: {
-        type: [String],
-        defalut: 'user'
-    },//  user,companyAdmin, sysadmin
-    estado: String, // A -> Activo, E -> Eliminado
-    fch_modificado: Date
+    rol: {
+        type: String,
+        default: 'user'
+    }, //  user,companyAdmin, sysadmin
+    estado: {
+        type: String,
+        default: 'A'
+    }, // A -> Activo, E -> Eliminado
+    fch_modificado: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 // methods ======================

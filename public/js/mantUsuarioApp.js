@@ -43,14 +43,11 @@
                         idOrg: function() {
                             return $scope.usuario.idOrganizacion;
                         },
-                        operacion: function(){
-                          return "agregar";
+                        operacion: function() {
+                            return "agregar";
                         },
-                        usuario: function(){
-                          return {};//objeto en blanco
-                        },
-                        usuarios: function(){
-                          return $scope.listaUsuarios;
+                        usuario: function() {
+                            return {}; //objeto en blanco
                         }
                     }
 
@@ -65,51 +62,48 @@
             };
 
             $scope.mostrarEditarPopup = function(usuario) {
-              var modalCrear = $uibModal.open({
-                  animation: true,
-                  templateUrl: 'popupCrearUsuario.html',
-                  controller: 'popupCrearCtrl',
-                  resolve: {
-                      idOrg: function() {
-                          return $scope.usuario.idOrganizacion;
-                      },
-                      operacion: function(){
-                        return "editar";
-                      },
-                      usuario: function(){
-                        return usuario;//objeto en blanco
-                      },
-                      usuarios: function(){
-                        return $scope.listaUsuarios;
-                      }
-                  }
+                var modalCrear = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'popupCrearUsuario.html',
+                    controller: 'popupCrearCtrl',
+                    resolve: {
+                        idOrg: function() {
+                            return $scope.usuario.idOrganizacion;
+                        },
+                        operacion: function() {
+                            return "editar";
+                        },
+                        usuario: function() {
+                            return usuario; //objeto en blanco
+                        }
+                    }
 
-              });
-              modalCrear.result.then(function(und) {
-                  //alert(usuario._id);
-                  $scope.poblarDatos();
+                });
+                modalCrear.result.then(function(und) {
+                    //alert(usuario._id);
+                    $scope.poblarDatos();
 
-              });
+                });
 
             };
 
-            $scope.mostrarEliminarPopup = function(usuario){
-              var modalEliminar = $uibModal.open({
-                  animation: true,
-                  templateUrl: 'popupEliminar.html',
-                  controller: 'popupEliminarCtrl',
-                  resolve: {
-                        usuario: function(){
-                        return usuario;//objeto en blanco
-                      }
-                  }
+            $scope.mostrarEliminarPopup = function(usuario) {
+                var modalEliminar = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'popupEliminar.html',
+                    controller: 'popupEliminarCtrl',
+                    resolve: {
+                        usuario: function() {
+                            return usuario; //objeto en blanco
+                        }
+                    }
 
-              });
-              modalEliminar.result.then(function(und) {
-                  //alert(usuario._id);
-                  $scope.poblarDatos();
+                });
+                modalEliminar.result.then(function(und) {
+                    //alert(usuario._id);
+                    $scope.poblarDatos();
 
-              });
+                });
 
             };
 
@@ -117,71 +111,92 @@
             $scope.poblarDatos();
 
         }
-    ]).controller("popupCrearCtrl", function($scope, $http, $uibModalInstance, idOrg,operacion,usuario,usuarios, comun) {
+    ]).controller("popupCrearCtrl", function($scope, $http, $uibModalInstance, idOrg, operacion, usuario, comun) {
         $scope.usuario = usuario;
         $scope.titulo = "Editar Usuario";
         $scope.fecha = new Date();
-        $scope.listaUsuarios =usuarios;
-        $scope.usuarioSeleccionado ={};
-
+        $scope.flgEditar = false;
+        $scope.flgCambiarClave = false;
+        $scope.rolSeleccionado = "";
+        $scope.clave = "";
+        $scope.repetirClave = "";
         //alert($scope.usuarioSeleccionado);
 
-        if(operacion=="agregar"){
-          $scope.usuario.properties = {};
-          $scope.usuario.properties.fch_inicio = $scope.fecha;
+        if (operacion == "agregar") {
+            $scope.usuario.idOrganizacion = idOrg;
+            $scope.flgCambiarClave = true;
 
-          $scope.titulo = "Crear Usuario"
-        } else if(operacion=="editar"){
-          if($scope.usuario.properties.asignado != null && $scope.usuario.properties.asignado!=undefined)
-            $scope.usuarioSeleccionado =$scope.usuario.properties.asignado;
-        //  alert($scope.usuarioSeleccionado);
+            $scope.titulo = "Crear Usuario"
+        } else if (operacion == "editar") {
+            if ($scope.usuario.rol != null && $scope.usuario.rol != undefined)
+                $scope.rolSeleccionado = $scope.usuario.rol;
+
+            $scope.usuario.fch_modificado = new Date();
+            $scope.flgEditar = true;
+            //  alert($scope.usuarioSeleccionado);
         }
-        $scope.cmbUsuarioChange= function(){
-          alert($scope.usuarioSeleccionado._id);
+        $scope.cmbRolChange = function() {
+            //alert($scope.usuarioSeleccionado._id);
+        };
+
+        $scope.validarClave = function(callback) {
+            if ($scope.clave.length >= 8) {
+                //validar que la clave coincida
+                if ($scope.clave == $scope.repetirClave) {
+                    callback();
+                } else {
+
+                    alert("Las contraseñas ingresadas no coinciden");
+                }
+
+            } else {
+                //utilizar mensajes mas estilizados
+                alert("La clave debe tener una longitud mayor a 8 caracteres.");
+            }
+
         };
 
 
         $scope.guardar = function() {
             //completar objeto
-            if(operacion=="agregar"){
-              $scope.usuario.properties.estado = "D";
-              $scope.usuario.properties.idOrganizacion = idOrg;
-              $scope.usuario.geometry={}
-              $scope.usuario.geometry.type='Point'
-              $scope.usuario.geometry.coordinates = [0, 0];
-              $scope.usuario.properties.asignado = $scope.usuarioSeleccionado;
+            if (operacion == "agregar") {
+                $scope.usuario.rol = $scope.rolSeleccionado;
+                //validar clave
+                $scope.validarClave(function(){
+                  //valido
+                  comun.guardarUsuario($scope.usuario, function(_und) {
+                      //alert(_und.id);
+                      $uibModalInstance.close(_und);
+                  });
 
-              comun.guardarUsuario($scope.usuario, function(_und) {
-                  //alert(_und.id);
-                  $uibModalInstance.close(_und);
-              });
-            } else if(operacion=="editar"){
-              //Editar
-
-              $scope.usuario.properties.asignado = $scope.usuarioSeleccionado;
-              comun.editarUsuario($scope.usuario,function(_und){
-                  $uibModalInstance.close(_und);
-              });
-
+                });
+            } else if (operacion == "editar") {
+                //Editar
+                $scope.usuario.rol = $scope.rolSeleccionado;
+                $scope.validarClave(function(){
+                  //valido
+                  comun.editarUsuario($scope.usuario, function(_und) {
+                      $uibModalInstance.close(_und);
+                  });
+                });
             }
-
         };
         $scope.cancelar = function() {
             $uibModalInstance.dismiss();
         }
 
-    }).controller("popupEliminarCtrl",function($scope,$http,$uibModalInstance,usuario,comun){
-      $scope.usuario=usuario;
+    }).controller("popupEliminarCtrl", function($scope, $http, $uibModalInstance, usuario, comun) {
+        $scope.usuario = usuario;
 
-      $scope.eliminar = function(){
-          $scope.usuario.properties.estado="E"; // e de eliminado
-          comun.editarUsuario($scope.usuario,function(_und){
-            $uibModalInstance.close(_und);
-          });
-      };
-      $scope.cancelar = function() {
-          $uibModalInstance.dismiss();
-      }
+        $scope.eliminar = function() {
+            $scope.usuario.properties.estado = "E"; // e de eliminado
+            comun.editarUsuario($scope.usuario, function(_und) {
+                $uibModalInstance.close(_und);
+            });
+        };
+        $scope.cancelar = function() {
+            $uibModalInstance.dismiss();
+        }
 
     });
 

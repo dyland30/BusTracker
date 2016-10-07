@@ -84,6 +84,21 @@
                         <label for="txtEmail">E-Mail</label>
                         <input type="text" name="txtEmail" id="txtEmail" class="form-control" ng-model="usuario.local.email">
                       </div>
+
+                      <div class="form-group" ng-show="flgEditar">
+                        <label for="ckCambiarClave">Cambiar Clave</label>
+                        <input type="checkbox" name="ckCambiarClave" id="ckCambiarClave" class="form-control" ng-model="flgCambiarClave" >
+                      </div>
+                      <div ng-show="flgCambiarClave">
+                          <div class="form-group">
+                            <label for="txtPassword">Contraseña</label>
+                            <input type="password" name="txtPassword" id="txtPassword" class="form-control" ng-model="clave">
+                          </div>
+                          <div class="form-group">
+                            <label for="txtPasswordRep">Repertir Contraseña</label>
+                            <input type="password" name="txtPasswordRep" id="txtPasswordRep" class="form-control" ng-model="repetirClave">
+                          </div>
+                      </div>
                       <div class="form-group">
                         <label for="txtDireccion1">Dirección</label>
                         <input type="text" name="txtDireccion1" id="txtDireccion1" class="form-control" ng-model="usuario.direccion[0]">
@@ -93,13 +108,8 @@
                         <label for="cmbRol">Rol</label>
                         <select class="form-control" name="cmbRol" id="cmbTipo" ng-model ="rolSeleccionado">
                             <option value="user">Usuario</option>
-                            <option value="Bus">Bus</option>
-                            <option value="Camion">Camion</option>
-                            <option value="Motocicleta">Motocicleta</option>
-                            <option value="Bicicleta">Bicicleta</option>
+                            <option value="companyAdmin">Administrador</option>
                         </select>
-
-
                       </div>
 
                     </div>

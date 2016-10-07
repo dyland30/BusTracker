@@ -17,7 +17,8 @@ exports = module.exports = function(app, mongoose) {
                 type: String
             }, // C -> Conectado, D -> Desconectado, E -> Eliminado
             fch_inicio: {
-                type: Date
+                type: Date,
+                default: Date.now
             },
             fch_fin: {
                 type: Date
