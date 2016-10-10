@@ -25,9 +25,46 @@
 
             }, function myError(response) {
                 _mensajeError = response.statusText;
+                console.log(_mensajeError);
                 callback(_usuario);
             });
         };
+
+        comunObj.obtenerUsuarioId = function(idUsuario, callback) {
+
+            $http({
+                method: "GET",
+                url: "api/user/"+idUsuario,
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }).then(function mySucces(response) {
+                _usuario = response.data;
+                callback(_usuario);
+            }, function myError(response) {
+                _mensajeError = response.statusText;
+                console.log(_mensajeError);
+                callback(_usuario);
+            });
+        };
+        comunObj.obtenerUsuarioEmail = function(email, callback) {
+            $http({
+                method: "GET",
+                url: "api/user/email/"+email,
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }).then(function mySucces(response) {
+                _usuario = response.data;
+                callback(_usuario);
+            }, function myError(response) {
+                _mensajeError = response.statusText;
+                console.log(_mensajeError);
+                callback(_usuario);
+            });
+        };
+
+
 
         comunObj.obtenerUsuariosOrganizacion = function(idOrganizacion,callback) {
 
@@ -44,8 +81,106 @@
 
             }, function myError(response) {
                 _mensajeError = response.statusText;
+                console.log(_mensajeError);
                 callback(_listaUsuarios);
             });
+        };
+        //guardar usuario
+        comunObj.guardarUsuario = function(usuario, callback) {
+
+            $http({
+                method: "POST",
+                url: "api/user/",
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                },
+                data: angular.toJson(usuario)
+            }).then(function mySucces(response) {
+
+                _usuario = response.data;
+                //  alert(response.data);
+                callback(_usuario);
+
+
+            }, function myError(response) {
+                var mensajeError = response.statusText;
+                console.log(mensajeError);
+                callback(_usuario);
+            });
+
+        };
+
+        //editar usuario
+        comunObj.editarUsuario = function(usuario, callback) {
+
+            //obtener usuario por id
+            comunObj.obtenerUsuarioId(usuario._id, function(us) {
+                //solo actualizar sus propiedades no la clave
+                us.local.email = usuario.local.email;
+                us.nombres = usuario.nombres;
+                us.docId = usuario.docId;
+                us.direccion = usuario.direccion;
+                us.rol = usuario.rol;
+                us.estado = usuario.estado;
+
+                $http({
+                    method: "PUT",
+                    url: "api/user/" + usuario._id,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    data: angular.toJson(us)
+                }).then(function mySucces(response) {
+
+                    _usuario = response.data;
+
+                    //  alert(response.data);
+                    callback(_usuario);
+
+                }, function myError(response) {
+                    var mensajeError = response.statusText;
+                    console.log(mensajeError);
+                    callback(_usuario);
+                });
+
+            });
+
+        };
+
+        // el cambiar la clave debe ser auto servicio
+        // el administrador no podrá cambiar clave de los usuarios
+        // si un usuario se olvida la clave debe solicitar por correo electronico
+
+        //cambiar clave
+        comunObj.cambiarClave = function(usuario,idUsuarioLogueado,claveAct,claveNuev, callback) {
+
+            //obtener usuario por id
+            comunObj.obtenerUsuarioId(usuario._id, function(us) {
+                //solo actualizar sus propiedades no la clave
+                var datos = {claveAnterior: claveAct, nuevaClave: nuevaClave};
+
+                $http({
+                    method: "PUT",
+                    url: "api/user/cambiarClave/" + usuario._id,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    data: angular.toJson(datos)
+                }).then(function mySucces(response) {
+
+                    _usuario = response.data;
+
+                    //  alert(response.data);
+                    callback(_usuario);
+
+                }, function myError(response) {
+                    var mensajeError = response.statusText;
+                    console.log(mensajeError);
+                    callback(_usuario);
+                });
+
+            });
+
         };
 
 
@@ -64,6 +199,7 @@
 
             }, function myError(response) {
                 _mensajeError = response.statusText;
+                console.log(_mensajeError);
                 callback(_organizacion);
             });
 
@@ -99,7 +235,8 @@
 
 
             }, function myError(response) {
-                $scope.mensajeError = response.statusText;
+                var mensajeError = response.statusText;
+                console.log(mensajeError);
                 callback(_listaUnidades);
             });
         };
@@ -123,11 +260,17 @@
 
 
             }, function myError(response) {
-                $scope.mensajeError = response.statusText;
+                var mensajeError = response.statusText;
+                console.log(mensajeError);
                 callback(_unidad);
             });
 
         };
+
+
+
+
+
 
         //obtener Unidad por Id
         comunObj.obtenerUnidadId = function(id, callback) {
@@ -145,7 +288,8 @@
 
 
             }, function myError(response) {
-                $scope.mensajeError = response.statusText;
+                var mensajeError = response.statusText;
+                console.log(mensajeError);
                 callback(_unidad);
             });
 
@@ -173,7 +317,8 @@
                     callback(_unidad);
 
                 }, function myError(response) {
-                    $scope.mensajeError = response.statusText;
+                    var mensajeError = response.statusText;
+                    console.log(mensajeError);
                     callback(_unidad);
                 });
 

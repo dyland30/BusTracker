@@ -118,18 +118,23 @@ module.exports = function(app, passport, acl, mongoose, express) {
 
     });
 
-    //REVISAR COMO ASIGNAR PERMISOS EN ACL
     //app.get('/unidad',isLoggedIn, acl.middleware(1,get_user_id),function(req,res){
-    app.get('/unidad',isLoggedIn,function(req,res){
+    app.get('/unidad',isLoggedIn,acl.middleware(1,get_user_id),function(req,res){
       res.render('../public/views/mantUnidad/index.ejs',{
+        user: req.user
+      });
+    });
+
+    app.get('/usuario',isLoggedIn,acl.middleware(1,get_user_id),function(req,res){
+      res.render('../public/views/mantUsuario/index.ejs',{
         user: req.user
       });
     });
 
     //rutas de control de accesos
     // Setting a new role
-    app.get('/allow/:user/:role', isLoggedIn, acl.middleware(1, get_user_id), function(request, response) {
-    //app.get('/allow/:user/:role', isLoggedIn, function(request, response) {
+    //app.get('/allow/:user/:role', isLoggedIn, acl.middleware(1, get_user_id), function(request, response) {
+    app.get('/allow/:user/:role', isLoggedIn, function(request, response) {
         acl.addUserRoles(request.params.user, request.params.role);
         response.send(request.params.user + ' is a ' + request.params.role);
     });
@@ -150,9 +155,14 @@ module.exports = function(app, passport, acl, mongoose, express) {
     routerApi.route('/users/:idOrganizacion').get(userCtrl.findByOrganizacion);
 
     //usuario logueado
-    routerApi.route('/user').get(userCtrl.getUserSession);
+    //usuarios
+    routerApi.route('/user').get(userCtrl.getUserSession).post(userCtrl.add);
+    routerApi.route('/user/:id').get(userCtrl.findById).put(userCtrl.update);
+    routerApi.route('/user/cambiarClave/:id').post(userCtrl.cambiarClave);
+    routerApi.route('/user/email/:email').get(userCtrl.findByEmail);
 
-    //usuario
+
+
     //lista completa de unidades
     routerApi.route('/unidad').get(unidadCtrl.findAll).post(unidadCtrl.add);
     //

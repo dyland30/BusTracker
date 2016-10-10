@@ -34,9 +34,7 @@
                         <th>
                           Doc. Identidad
                         </th>
-                        <th>
-                            Tipo
-                        </th>
+
                         <th>
                             Estado
                         </th>
@@ -51,11 +49,12 @@
                             {{u.nombres}}
                         </td>
                         <td>
-                          {{u.docId}}
-                        </td>
-                        <td>
                             {{u.local.email}}
                         </td>
+                        <td>
+                          {{u.docId}}
+                        </td>
+
                         <td>
                             {{u.estado}}
                         </td>
@@ -84,6 +83,10 @@
                         <label for="txtEmail">E-Mail</label>
                         <input type="text" name="txtEmail" id="txtEmail" class="form-control" ng-model="usuario.local.email">
                       </div>
+                      <div class="form-group">
+                        <label for="txtDocId">Doc. Identidad</label>
+                        <input type="text" name="txtDocId" id="txtDocId" class="form-control" ng-model="usuario.docId">
+                      </div>
 
                       <div class="form-group" ng-show="flgEditar">
                         <label for="ckCambiarClave">Cambiar Clave</label>
@@ -101,8 +104,8 @@
                       </div>
                       <div class="form-group">
                         <label for="txtDireccion1">Dirección</label>
-                        <input type="text" name="txtDireccion1" id="txtDireccion1" class="form-control" ng-model="usuario.direccion[0]">
-                        <input type="text" name="txtDireccion2" id="txtDireccion2" class="form-control" ng-model="usuario.direccion[1]">
+                        <input type="text" name="txtDireccion1" id="txtDireccion1" class="form-control" ng-model="direccion_0">
+                        <input type="text" name="txtDireccion2" id="txtDireccion2" class="form-control" ng-model="direccion_1">
                       </div>
                       <div class="form-group">
                         <label for="cmbRol">Rol</label>
@@ -111,9 +114,7 @@
                             <option value="companyAdmin">Administrador</option>
                         </select>
                       </div>
-
                     </div>
-
                 </div>
                 <div class="modal-footer">
                   <button type="button" name="btnGuardarUsuario" class="btn btn-primary" ng-click="guardar()"><span class="fa fa-floppy-o"></span> Guardar</button>

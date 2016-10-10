@@ -117,9 +117,11 @@
         $scope.fecha = new Date();
         $scope.flgEditar = false;
         $scope.flgCambiarClave = false;
-        $scope.rolSeleccionado = "";
+        $scope.rolSeleccionado = "user";
         $scope.clave = "";
         $scope.repetirClave = "";
+        $scope.direccion_0 ="";
+        $scope.direccion_1 ="";
         //alert($scope.usuarioSeleccionado);
 
         if (operacion == "agregar") {
@@ -131,8 +133,11 @@
             if ($scope.usuario.rol != null && $scope.usuario.rol != undefined)
                 $scope.rolSeleccionado = $scope.usuario.rol;
 
-            $scope.usuario.fch_modificado = new Date();
+            $scope.usuario.fch_modificado = Date.now();
             $scope.flgEditar = true;
+            $scope.rolSeleccionado = $scope.usuario.rol;
+            $scope.direccion_0 =$scope.usuario.direccion[0];
+            $scope.direccion_1 =$scope.usuario.direccion[1];
             //  alert($scope.usuarioSeleccionado);
         }
         $scope.cmbRolChange = function() {
@@ -158,27 +163,41 @@
 
 
         $scope.guardar = function() {
+            $scope.usuario.rol = $scope.rolSeleccionado;
+            $scope.usuario.direccion = [$scope.direccion_0, $scope.direccion_1];
             //completar objeto
             if (operacion == "agregar") {
-                $scope.usuario.rol = $scope.rolSeleccionado;
+                //validar correo y validar que sea unico
+                $scope.usuario.local.password = $scope.clave;
+
+
                 //validar clave
                 $scope.validarClave(function(){
                   //valido
                   comun.guardarUsuario($scope.usuario, function(_und) {
                       //alert(_und.id);
+                      //agregar roles
                       $uibModalInstance.close(_und);
                   });
 
                 });
             } else if (operacion == "editar") {
                 //Editar
-                $scope.usuario.rol = $scope.rolSeleccionado;
-                $scope.validarClave(function(){
-                  //valido
-                  comun.editarUsuario($scope.usuario, function(_und) {
-                      $uibModalInstance.close(_und);
+                if($scope.flgCambiarClave){
+                  $scope.validarClave(function(){
+                    //valido
+                    comun.editarUsuario($scope.usuario, function(_und) {
+                        $uibModalInstance.close(_und);
+                    });
                   });
-                });
+                } else{
+                    // no validar clave
+                    comun.editarUsuario($scope.usuario, function(_und) {
+                        $uibModalInstance.close(_und);
+                    });
+
+                }
+
             }
         };
         $scope.cancelar = function() {

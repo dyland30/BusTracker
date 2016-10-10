@@ -90,7 +90,7 @@ if (cluster.isMaster) {
         acl.allow([{
             roles: ['sysadmin'],
             allows: [{
-                resources: ['/profile', '/signup', '/login', '/api', '/mantOrganizacion', '/allow', '/disallow', '/unidad'],
+                resources: ['/profile', '/signup', '/login', '/api', '/mantOrganizacion', '/allow', '/disallow', '/unidad','/usuario'],
                 permissions: ['get', 'put', 'post', 'delete']
             }]
         }, {

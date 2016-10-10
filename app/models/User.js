@@ -46,6 +46,10 @@ var userSchema = mongoose.Schema({
     fch_modificado: {
         type: Date,
         default: Date.now
+    },
+    usuarioModificador:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
     }
 });
 
