@@ -112,7 +112,7 @@ if (cluster.isMaster) {
     });
 
     // Start server
-    app.listen(port, function() {
+    app.listen(port,'0.0.0.0', function() {
         console.log("Node server running on http://localhost:" + port.toString());
     });
 
