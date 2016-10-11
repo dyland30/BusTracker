@@ -26,7 +26,14 @@ module.exports = function(app, passport, acl, mongoose, express) {
     // HOME PAGE (with login links) ========
     // =====================================
     app.get('/', function(req, res) {
-        res.render('../public/views/index.ejs'); // load the index.ejs file
+      if(req.user != undefined && req.user != null){
+        res.redirect('/profile');
+      } else{
+        res.render('../public/views/index.ejs',{
+          user: req.user
+        });
+      }
+         // load the index.ejs file
     });
 
     // =====================================
@@ -37,7 +44,8 @@ module.exports = function(app, passport, acl, mongoose, express) {
 
         // render the page and pass in any flash data if it exists
         res.render('../public/views/login.ejs', {
-            message: req.flash('loginMessage')
+            message: req.flash('loginMessage'),
+            user: req.user
         });
     });
 
@@ -56,7 +64,8 @@ module.exports = function(app, passport, acl, mongoose, express) {
 
         // render the page and pass in any flash data if it exists
         res.render('../public/views/signup.ejs', {
-            message: req.flash('signupMessage')
+            message: req.flash('signupMessage'),
+            user: req.user
         });
     });
 
