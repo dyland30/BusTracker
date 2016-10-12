@@ -83,7 +83,7 @@ if (cluster.isMaster) {
         app.use(flash());
 
         //captcha imagen
-        app.use(captcha({ url: '/captcha.jpg', color:'#0064cd', background: 'rgb(20,30,200)' })); // captcha params
+        app.use(captcha({ url: '/captcha.jpg', color:'#007EA7', background: 'rgb(241,247,237)' })); // captcha params
 
 
 
