@@ -45,8 +45,13 @@ module.exports = function(passport) {
         // User.findOne wont fire unless data is sent back
         process.nextTick(function() {
 
+          //validate captcha
+          if(req.body.digits != req.session.captcha){
+              return done(null, false, req.flash('signupMessage', 'Las letras no coinciden.'));
+          }
         // find a user whose email is the same as the forms email
         // we are checking to see if the user trying to login already exists
+
         User.findOne({ 'local.email' :  email }, function(err, user) {
             // if there are any errors, return the error
             if (err)
