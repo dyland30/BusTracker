@@ -38,6 +38,8 @@ if (cluster.isMaster) {
     var mongoSessionStore = require('connect-mongo')(session);
     //var configDB = require('./config/database.js');
 
+    var captcha = require('easy-captcha');
+
     var acl = require('acl');
 
     //configurar passport
@@ -80,6 +82,11 @@ if (cluster.isMaster) {
         app.use(passport.session()); // persistent login sessions
         app.use(flash());
 
+        //captcha imagen
+        app.use('/captcha.jpg', captcha.generate());
+
+
+
 
         console.log('Connected to Database');
         //control de acceso
@@ -107,7 +114,7 @@ if (cluster.isMaster) {
             }]
         }]);
         //routes
-        require('./app/routes.js')(app, passport, acl, mongoose, express); // load our routes and pass in our app and fully configured passport
+        require('./app/routes.js')(app, passport, acl, mongoose, express,captcha); // load our routes and pass in our app and fully configured passport
 
     });
 

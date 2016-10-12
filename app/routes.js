@@ -1,4 +1,4 @@
-module.exports = function(app, passport, acl, mongoose, express) {
+module.exports = function(app, passport, acl, mongoose, express,captcha) {
 
     //MODELOS Y CONTROLADORES
     var unidadModel = require('./models/Unidad')(app, mongoose);
@@ -69,8 +69,9 @@ module.exports = function(app, passport, acl, mongoose, express) {
         });
     });
 
+    //agregamos capthca.check middleware 
     // process the signup form
-    app.post('/signup', passport.authenticate('local-signup', {
+    app.post('/signup',captcha.check, passport.authenticate('local-signup', {
         successRedirect: '/profile', // redirect to the secure profile section
         failureRedirect: '/signup', // redirect back to the signup page if there is an error
         failureFlash: true // allow flash messages
