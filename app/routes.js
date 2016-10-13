@@ -1,4 +1,4 @@
-module.exports = function(app, passport, acl, mongoose, express,captcha) {
+module.exports = function(app, passport, acl, mongoose, express) {
 
     //MODELOS Y CONTROLADORES
     var unidadModel = require('./models/Unidad')(app, mongoose);
@@ -34,6 +34,21 @@ module.exports = function(app, passport, acl, mongoose, express,captcha) {
         });
       }
          // load the index.ejs file
+    });
+
+    app.get('/crearCaptcha',function(req,res){
+
+      var request = require('request').defaults({ encoding: null });
+      var baseUrl = req.protocol + '://' + req.get('host')
+      request.get(baseUrl+'/captcha.jpg',function(err,resp,body){
+        if(!err && resp.statusCode ==200){
+          datos =  new Buffer(body).toString('base64');
+          res.status(200).send(datos);
+        } else{
+          res.send(500,err.message);
+        }
+      });
+
     });
 
     // =====================================

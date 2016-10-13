@@ -114,7 +114,7 @@ if (cluster.isMaster) {
             }]
         }]);
         //routes
-        require('./app/routes.js')(app, passport, acl, mongoose, express,captcha); // load our routes and pass in our app and fully configured passport
+        require('./app/routes.js')(app, passport, acl, mongoose, express); // load our routes and pass in our app and fully configured passport
 
     });
 

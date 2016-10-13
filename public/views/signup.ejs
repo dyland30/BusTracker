@@ -1,56 +1,79 @@
 <!-- views/index.ejs -->
 <!doctype html>
 <html>
+
 <head>
     <% include partials/head %>
 </head>
+
 <body>
-  <header>
-    <% include partials/header %>
-  </header>
-  <main>
+    <header>
+        <% include partials/header %>
+    </header>
+    <main>
 
-    <div class="container">
+        <div class="container">
 
-    <div class="col-sm-6 col-sm-offset-3">
+            <div class="col-sm-6 col-sm-offset-3">
 
-        <h1><span class="fa fa-sign-in"></span> Crea tu cuenta</h1>
+                <h1><span class="fa fa-sign-in"></span> Crea tu cuenta</h1>
 
-        <!-- show any messages that come back with authentication -->
-        <% if (message.length > 0) { %>
-            <div class="alert alert-danger"><%= message %></div>
-        <% } %>
+                <!-- show any messages that come back with authentication -->
+                <% if (message.length > 0) { %>
+                    <div class="alert alert-danger">
+                        <%= message %>
+                    </div>
+                    <% } %>
 
-        <!-- LOGIN FORM -->
-        <form action="/signup" method="post">
-            <div class="form-group">
-                <label>Email</label>
-                <input type="text" class="form-control" name="email">
+                        <!-- LOGIN FORM -->
+                        <form action="/signup" method="post">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="text" class="form-control" name="email">
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" class="form-control" name="password">
+                            </div>
+                            <div class="form-group">
+                                <label>Ingresa los números que aparecen en la siguiente imagen:</label> <br>
+                                <button type="button" name="reload" onclick="cargarCaptcha()"><span class="fa fa-refresh"></span></button>
+                                <span id="imagen"></span> <br>
+                                <input type="text" class="form-control" name="digits">
+                            </div>
+
+                            <button type="submit" class="btn btn-warning btn-lg">Crear</button>
+                        </form>
+
+                        <hr>
+
+                        <p>¿Ya tienes una cuenta? <a href="/login">Ingresa aqui</a></p>
+
             </div>
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" class="form-control" name="password">
-            </div>
-            <div class="form-group">
-                <label>Ingresa los números de la imagen</label> <br>
-                <img src="/captcha.jpg" alt="" /> <br>
-                <input type="text" class="form-control" name="digits">
-            </div>
 
-            <button type="submit" class="btn btn-warning btn-lg">Crear</button>
-        </form>
+        </div>
+        <script type="text/javascript">
+            function cargarCaptcha() {
 
-        <hr>
+                $.ajax({
+                    type: "GET",
+                    url: '/crearCaptcha',
+                    contentType: "image/JPEG",
+                    success: function(data) {
+                        $('#imagen').html('<img src="data:image/JPEG;base64,' + data + '" />');
+                    }
+                });
+            }
 
-        <p>¿Ya tienes una cuenta? <a href="/login">Ingresa aqui</a></p>
+            $(document).ready(function() {
+                cargarCaptcha();
 
-    </div>
-
-    </div>
-
-  </main>
-  <footer>
-    <% include partials/footer %>
-  </footer>
+            });
+        </script>
+    </main>
+    <footer>
+        <% include partials/footer %>
+    </footer>
 </body>
+
 </html>
