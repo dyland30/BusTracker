@@ -75,15 +75,17 @@ if (cluster.isMaster) {
             store: new mongoSessionStore({
                 mongooseConnection: mongoose.connection
             }),
-            resave: true,
-            saveUninitialized: true
+            resave: false,
+            saveUninitialized: false
         })); // session secret
         app.use(passport.initialize());
         app.use(passport.session()); // persistent login sessions
         app.use(flash());
 
         //captcha imagen
-        app.use(captcha({ url: '/captcha.jpg', color:'#007EA7', background: 'rgb(241,247,237)' })); // captcha params
+      //  app.use(captcha({ url: '/captcha.jpg', color:'#007EA7', background: 'rgb(241,247,237)' })); // captcha params
+      //  usaremos recaptcha
+      
 
 
 

@@ -36,12 +36,19 @@ module.exports = function(app, passport, acl, mongoose, express) {
          // load the index.ejs file
     });
 
+
     app.get('/crearCaptcha',function(req,res){
+      console.log(':: /crearCaptcha  '+Date.now().toString());
+
+
+      var baseUrl = req.protocol + '://' + req.get('host')
+
+// este request crea una nueva sesion por ese motivo el captcha no viaja de vuelta
 
       var request = require('request').defaults({ encoding: null });
-      var baseUrl = req.protocol + '://' + req.get('host')
-      request.get(baseUrl+'/captcha.jpg',function(err,resp,body){
-        if(!err && resp.statusCode ==200){
+        request.get(baseUrl+'/captcha.jpg',function(err,resp,body){
+          if(!err && resp.statusCode ==200){
+          console.log(':: /captcha.jpg  '+Date.now().toString()+' '+req.session.captcha);
           datos =  new Buffer(body).toString('base64');
           res.status(200).send(datos);
         } else{
@@ -50,6 +57,7 @@ module.exports = function(app, passport, acl, mongoose, express) {
       });
 
     });
+
 
     // =====================================
     // LOGIN ===============================

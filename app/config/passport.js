@@ -6,6 +6,9 @@ var LocalStrategy = require('passport-local').Strategy;
 // load up the user model
 var User = require('../models/User.js');
 
+var CAPTCHA_PRIVATE_KEY = "6LdxOAkUAAAAAAl3uMLwEzgAaqDe4njveeJuX7M-";
+var request = require('request');
+
 // expose this function to our app using module.exports
 module.exports = function(passport) {
 
@@ -41,10 +44,12 @@ module.exports = function(passport) {
     }, function(req, email, password, done) {
 
         //validate captcha
-        console.log("digits " + req.body.digits + " captcha " + req.session.captcha);
-        if (req.body.digits != req.session.captcha) {
-            return done(null, false, req.flash('signupMessage', 'Las letras no coinciden.'));
-        }
+        /*  console.log("digits "+req.body.digits+ " captcha "+req.session.captcha);
+      if(req.body.digits != req.session.captcha){
+          return done(null, false, req.flash('signupMessage', 'Las letras no coinciden.'));
+      }
+      */
+
         // asynchronous
         // User.findOne wont fire unless data is sent back
         process.nextTick(function() {
@@ -52,35 +57,73 @@ module.exports = function(passport) {
             // find a user whose email is the same as the forms email
             // we are checking to see if the user trying to login already exists
 
-            User.findOne({
-                'local.email': email
-            }, function(err, user) {
-                // if there are any errors, return the error
-                if (err)
-                    return done(err);
+            if (req.body['g-recaptcha-response'] != undefined && req.body['g-recaptcha-response'] != null && req.body['g-recaptcha-response'].length > 0) {
 
-                // check to see if theres already a user with that email
-                if (user) {
-                    return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
-                } else {
+                var datos ={
+                  secret: CAPTCHA_PRIVATE_KEY,
+                  response:req.body['g-recaptcha-response']
+                };
+                // validar recaptcha
+                request.post({url:'https://www.google.com/recaptcha/api/siteverify', formData:datos}, function(error, response, body) {
 
-                    // if there is no user with that email
-                    // create the user
-                    var newUser = new User();
+                    if (!error && response.statusCode == 200) {
 
-                    // set the user's local credentials
-                    newUser.local.email = email;
-                    newUser.local.password = newUser.generateHash(password);
+                        console.log(body);
+                        var respuesta = JSON.parse(body);
+                        
+                        if(respuesta.success ==true){
+                          console.log("captcha valido");
+                          User.findOne({
+                              'local.email': email
+                          }, function(err, user) {
+                              // if there are any errors, return the error
+                              if (err)
+                                  return done(err);
 
-                    // save the user
-                    newUser.save(function(err) {
-                        if (err)
-                            throw err;
-                        return done(null, newUser);
-                    });
-                }
+                              // check to see if theres already a user with that email
+                              if (user) {
+                                  return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
+                              } else {
 
-            });
+                                  // if there is no user with that email
+                                  // create the user
+                                  var newUser = new User();
+
+                                  // set the user's local credentials
+                                  newUser.local.email = email;
+                                  newUser.local.password = newUser.generateHash(password);
+
+                                  // save the user
+                                  newUser.save(function(err) {
+                                      if (err)
+                                          throw err;
+                                      return done(null, newUser);
+                                  });
+                              }
+
+                          });
+
+
+                        } else{
+                          //console.log("captcha invalido");
+                          return done(null, false, req.flash('signupMessage', 'Este sitio no esta hecho para robots!'));
+
+                        }
+
+
+                    } else {
+                        console.log("captcha invalido");
+                        return done(null, false, req.flash('signupMessage', 'Por favor confirma que no eres un robot'));
+                    }
+                });
+
+            } else {
+
+              console.log("captcha invalido");
+              return done(null, false, req.flash('signupMessage', 'Por favor confirma que no eres un robot'));
+
+
+            }
 
         });
 
