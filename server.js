@@ -38,7 +38,6 @@ if (cluster.isMaster) {
     var mongoSessionStore = require('connect-mongo')(session);
     //var configDB = require('./config/database.js');
 
-    var captcha = require('captcha');
 
     var acl = require('acl');
 
@@ -85,7 +84,7 @@ if (cluster.isMaster) {
         //captcha imagen
       //  app.use(captcha({ url: '/captcha.jpg', color:'#007EA7', background: 'rgb(241,247,237)' })); // captcha params
       //  usaremos recaptcha
-      
+
 
 
 

@@ -70,7 +70,7 @@ module.exports = function(passport) {
 
                         console.log(body);
                         var respuesta = JSON.parse(body);
-                        
+
                         if(respuesta.success ==true){
                           console.log("captcha valido");
                           User.findOne({
@@ -82,7 +82,7 @@ module.exports = function(passport) {
 
                               // check to see if theres already a user with that email
                               if (user) {
-                                  return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
+                                  return done(null, false, req.flash('signupMessage', 'El correo indicado ya se encuentra registrado en el sistema.'));
                               } else {
 
                                   // if there is no user with that email

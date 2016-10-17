@@ -1,16 +1,27 @@
 module.exports = function(app, passport, acl, mongoose, express) {
 
     //MODELOS Y CONTROLADORES
-    var unidadModel = require('./models/Unidad')(app, mongoose);
-    var organizacionModel = require('./models/Organizacion')(app, mongoose);
-    var unidadHistorialModel = require('./models/UnidadHistorial')(app, mongoose);
-    var Organizacion = mongoose.model('Organizacion');
-    var TipoUnidadModel = require('./models/TipoUnidad')(app, mongoose);
+    var unidadModel = require('./models/Unidad.jd')(app, mongoose);
+    var organizacionModel = require('./models/Organizacion.js')(app, mongoose);
+    var unidadHistorialModel = require('./models/UnidadHistorial.js')(app, mongoose);
+    //var Organizacion = mongoose.model('Organizacion');
+
+    var TipoUnidadModel = require('./models/TipoUnidad.js')(app, mongoose);
+
+    var planModel = require('./models/Plan.js')(app, mongoose);
+    var periodoPlanModel = require('./models/PeriodoPlan.js')(app, mongoose);
+
+
+
     var unidadCtrl = require('./controllers/UnidadController.js');
     var organizacionCtrl = require('./controllers/OrganizacionController.js');
     var tipoUnidadCtrl = require('./controllers/TipoUnidadController.js');
     var unidadHistorialCtrl = require('./controllers/UnidadHistorialController.js');
     var userCtrl = require('./controllers/UserController.js');
+
+    var planCtrl = require('./controllers/PlanController.js');
+    var periodoPlanctrl = require('./controllers/PeriodoPlanController.js');
+
 
 
     //no cache
@@ -135,6 +146,11 @@ module.exports = function(app, passport, acl, mongoose, express) {
     // we will use route middleware to verify this (the isLoggedIn function)
     app.get('/mantOrganizacion', isLoggedIn, acl.middleware(1, get_user_id), function(req, res) {
 
+      res.render('../public/views/mantOrganizacion/index.ejs',{
+        user: req.user
+      });
+
+      /*
         Organizacion.find(function(err, orgs) {
             if (err) {
                 res.render('../public/views/mantOrganizacion/index.ejs', {
@@ -148,6 +164,8 @@ module.exports = function(app, passport, acl, mongoose, express) {
                 });
             }
         });
+
+          */
 
     });
 
@@ -219,6 +237,17 @@ module.exports = function(app, passport, acl, mongoose, express) {
     routerApi.route('/tipounidad').get(tipoUnidadCtrl.findAll).post(tipoUnidadCtrl.add);
 
     routerApi.route('/tipounidad/:id').get(tipoUnidadCtrl.findById).put(tipoUnidadCtrl.update).delete(tipoUnidadCtrl.delete);
+
+
+    routerApi.route('/plan').get(planCtrl.findAll).post(planCtrl.add);
+
+    routerApi.route('/plan/:id').get(planCtrl.findById).put(planCtrl.update).delete(planCtrl.delete);
+
+    routerApi.route('/periodoplan').get(periodoPlanctrl.findAll).post(periodoPlanctrl.add);
+
+    routerApi.route('/periodoplan/:id').get(periodoPlanctrl.findById).put(periodoPlanctrl.update).delete(periodoPlanctrl.delete);
+
+
 
 
     app.use('/api', routerApi);
