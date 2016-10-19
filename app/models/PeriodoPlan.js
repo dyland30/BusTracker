@@ -9,11 +9,11 @@ exports = module.exports = function(app, mongoose) {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'Organizacion'
         },
-        fch_inicio {
+        fch_inicio: {
           type: Date,
           default : Date.now
         },
-        fch_fin {
+        fch_fin: {
           type: Date
         }
 

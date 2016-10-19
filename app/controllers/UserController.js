@@ -44,6 +44,26 @@ exports.findByEmail= function(req, res) {
 };
 
 
+exports.login = function(req, res){
+  var mensajeError = "Usuario o clave incorrectos";
+  User.findOne({ 'local.email' :  req.params.email }, function(err, user) {
+      if (err) return res.send(500, err.message);
+
+      if(!user){
+        return res.send(500, mensajeError);
+      }
+      if(!user.validPassword(req.params.clave)){
+        return res.send(500,mensajeError);
+      }
+      console.log('GET /user/login/' + req.params.id);
+      res.status(200).jsonp(user);
+  });
+
+
+
+};
+
+
 
 //POST - Insert a new user in the DB
 

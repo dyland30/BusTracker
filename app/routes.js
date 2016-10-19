@@ -1,7 +1,7 @@
 module.exports = function(app, passport, acl, mongoose, express) {
 
     //MODELOS Y CONTROLADORES
-    var unidadModel = require('./models/Unidad.jd')(app, mongoose);
+    var unidadModel = require('./models/Unidad.js')(app, mongoose);
     var organizacionModel = require('./models/Organizacion.js')(app, mongoose);
     var unidadHistorialModel = require('./models/UnidadHistorial.js')(app, mongoose);
     //var Organizacion = mongoose.model('Organizacion');
@@ -211,6 +211,10 @@ module.exports = function(app, passport, acl, mongoose, express) {
     routerApi.route('/user/:id').get(userCtrl.findById).put(userCtrl.update);
     routerApi.route('/user/cambiarClave/:id').post(userCtrl.cambiarClave);
     routerApi.route('/user/email/:email').get(userCtrl.findByEmail);
+    //login
+    routerApi.route('/user/login/:email/:clave').get(userCtrl.login);
+
+
 
 
 
