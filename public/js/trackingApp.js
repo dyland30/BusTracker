@@ -1,10 +1,29 @@
 (function() {
     'use strict';
 
-    angular.module('trackingApp', []).controller('MainController', function($scope, $http) {
+    angular.module('trackingApp', ['ui.bootstrap']).controller('MainController', function($scope, $http) {
         $scope.organizacion = {};
         $scope.usuario = {};
         $scope.listaUnidades = [];
+        $scope.fechaHasta = Date.now();
+        $scope.fechaDesde = $scope.fechaHasta - 1;
+
+
+        $scope.popup1 = {
+            opened: false
+        };
+
+        $scope.popup2 = {
+            opened: false
+        };
+        $scope.open1 = function() {
+            $scope.popup1.opened = true;
+        };
+
+        $scope.open2 = function() {
+            $scope.popup2.opened = true;
+        };
+
 
         $scope.obtenerUsuario = function() {
 

@@ -32,10 +32,30 @@
                         <label for="cmbUnidad">Unidad:</label>
                         <select id="cmbUnidad" class="form-control" style="width: 250px" ng-options="unidad.properties.identificador for unidad in listaUnidades track by unidad.id" ng-model="unidadSeleccionada" ng-change="cmbUnidadChange()">
                         </select>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="">Desde:</label>
+                        <div class="input-group">
+                            <input type="text" name="fchInicio" class="form-control" id="fchInicio" uib-datepicker-popup="dd/MM/yyyy" is-open="popup1.opened" datepicker-options="dateOptions" ng-model="fechaDesde" />
+                            <span class="input-group-btn">
+                                  <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                          </span>
+                        </div>
+
                     </div>
 
                     <div class="form-group">
-                        <button type="iniciar" class="form-control" name="iniciar">Buscar</button>
+                        <label for="">Hasta:</label>
+                        <div class="input-group">
+                            <input type="text" name="fchFin" class="form-control" id="fchFIn" uib-datepicker-popup="dd/MM/yyyy" is-open="popup2.opened" datepicker-options="dateOptions" ng-model="fechaHasta" />
+                            <span class="input-group-btn">
+                          <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+                        </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="form-control" name="btnHistorial">Ver Historial</button>
                     </div>
 
                 </div>
@@ -54,7 +74,7 @@
                 // obtener usuario de session
                 var map;
 
-                var listaMarcadores =[];
+                var listaMarcadores = [];
 
 
                 map = new google.maps.Map(document.getElementById('map'), {
@@ -113,30 +133,30 @@
                     var idOrganizacion = angular.element(document.querySelector('[ng-controller="MainController"]')).scope().usuario.idOrganizacion;
 
                     //marker.setPosition(movPos);
-                    angular.element(document.querySelector('[ng-controller="MainController"]')).scope().obtenerUnidadesOrganizacion(idOrganizacion,function(){
+                    angular.element(document.querySelector('[ng-controller="MainController"]')).scope().obtenerUnidadesOrganizacion(idOrganizacion, function() {
 
-                      //remover marcadores
-                      listaMarcadores.forEach(function(marcador){
-                        marcador.setMap(null);
-                      });
+                        //remover marcadores
+                        listaMarcadores.forEach(function(marcador) {
+                            marcador.setMap(null);
+                        });
 
-                      listaMarcadores = [];
+                        listaMarcadores = [];
 
-                      //callback
-                        var unidades =  angular.element(document.querySelector('[ng-controller="MainController"]')).scope().listaUnidades;
+                        //callback
+                        var unidades = angular.element(document.querySelector('[ng-controller="MainController"]')).scope().listaUnidades;
 
-                        unidades.forEach(function(unidad){
-                          var movPos = {
-                              lat: unidad.geometry.coordinates[0],
-                              lng: unidad.geometry.coordinates[1]
-                          };
+                        unidades.forEach(function(unidad) {
+                            var movPos = {
+                                lat: unidad.geometry.coordinates[0],
+                                lng: unidad.geometry.coordinates[1]
+                            };
 
-                          var marker = new google.maps.Marker({
-                              position: movPos,
-                              map: map,
-                              title: unidad.properties.identificador
-                          });
-                          listaMarcadores.push(marker);
+                            var marker = new google.maps.Marker({
+                                position: movPos,
+                                map: map,
+                                title: unidad.properties.identificador
+                            });
+                            listaMarcadores.push(marker);
 
                         });
 
@@ -150,13 +170,13 @@
                 //bucle recursivo para asegurar que funcione el setTimeout
                 //var i = 0, n = 100;
                 function iniciarMonitoreo() {
-                  //  movPos.lat += 0.01;
-                  //  movPos.lng += 0.01;
+                    //  movPos.lat += 0.01;
+                    //  movPos.lng += 0.01;
 
                     //  alert(movPos.lat.toString() +" "+ movPos.lng.toString());
-                    redraw(function(){
-                      //al terminar
-                      setTimeout(iniciarMonitoreo, 1000);
+                    redraw(function() {
+                        //al terminar
+                        setTimeout(iniciarMonitoreo, 1000);
 
                     });
 
