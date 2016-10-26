@@ -6,7 +6,7 @@
         $scope.usuario = {};
         $scope.listaUnidades = [];
         $scope.fechaHasta = Date.now();
-        $scope.fechaDesde = $scope.fechaHasta - 1;
+        $scope.fechaDesde = $scope.fechaHasta- 1;
 
 
         $scope.popup1 = {
