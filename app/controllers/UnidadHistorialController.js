@@ -14,11 +14,36 @@ exports.findAll = function(req, res) {
 exports.findByUnidadId = function(req, res) {
 
     //  UnidadHistorial.find({'idUnidad':req.params.idUnidad}).where('idUnidad').equals(req.params.idUnidad).sort({'fecha_registro':-1}).exec(function(err, unidadHistoriales){
-    UnidadHistorial.where('properties.idUnidad', req.params.idUnidad).sort({
+
+    //convert date from ISODATE
+    //YYYY-MM-DDTHH:MM:SS
+
+    //var fechaDesde = new Date(req.params.fechaDesde);
+    //var fechaHasta = new Date(req.params.fechaHasta);
+    var fechaDesde =req.params.fechaDesde;
+    var fechaHasta = req.params.fechaHasta;
+
+    var idUnidad = req.params.idUnidad
+
+    console.log(fechaDesde);
+
+    console.log(fechaHasta);
+
+    console.log(idUnidad);
+
+
+    UnidadHistorial.find({
+        $and: [{
+            'properties.fecha_registro': {"$gte": fechaDesde, "$lt": fechaHasta}
+        }, {
+            'properties.idUnidad': idUnidad
+        }]
+    }).sort({
         'properties.fecha_registro': -1
     }).exec(function(err, unidadHistoriales) {
         if (err) res.send(500, err.message);
         console.log('GET /unidad/historial')
+
         res.status(200).jsonp(unidadHistoriales);
     });
 

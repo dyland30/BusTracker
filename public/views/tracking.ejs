@@ -30,7 +30,7 @@
                 <div class="form form-inline">
                     <div class="form-group">
                         <label for="cmbUnidad">Unidad:</label>
-                        <select id="cmbUnidad" class="form-control" style="width: 250px" ng-options="unidad.properties.identificador for unidad in listaUnidades track by unidad.id" ng-model="unidadSeleccionada" ng-change="cmbUnidadChange()">
+                        <select id="cmbUnidad" class="form-control" style="width: 250px" ng-options="unidad.properties.identificador for unidad in listaUnidades track by unidad._id" ng-model="unidadSeleccionada" ng-change="cmbUnidadChange()">
                         </select>
 
                     </div>
@@ -55,7 +55,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <button type="button" class="form-control" name="btnHistorial">Ver Historial</button>
+                        <button type="button" class="form-control" name="btnHistorial" onclick="btnVerHistorialClick()">{{btnHistorialTitle}}</button>
                     </div>
 
                 </div>
@@ -75,6 +75,12 @@
                 var map;
 
                 var listaMarcadores = [];
+                var ruta = [];
+                var listaHistorial = [];
+                var flightPath;
+
+
+
 
 
                 map = new google.maps.Map(document.getElementById('map'), {
@@ -132,6 +138,11 @@
                     //remover marcadores
                     var idOrganizacion = angular.element(document.querySelector('[ng-controller="MainController"]')).scope().usuario.idOrganizacion;
 
+                    var flgMostrarHistorial = angular.element(document.querySelector('[ng-controller="MainController"]')).scope().flgMostrarHistorial;
+
+                    var unidadSeleccionada = angular.element(document.querySelector('[ng-controller="MainController"]')).scope().unidadSeleccionada;
+
+                    
                     //marker.setPosition(movPos);
                     angular.element(document.querySelector('[ng-controller="MainController"]')).scope().obtenerUnidadesOrganizacion(idOrganizacion, function() {
 
@@ -158,7 +169,18 @@
                             });
                             listaMarcadores.push(marker);
 
+                            //agregar lineas a historial
+                            if (flgMostrarHistorial) {
+                                if (unidadSeleccionada._id == unidad._id) {
+                                    ruta.push(movPos);
+
+                                }
+                            }
+
                         });
+
+                        //obtener historial y crear polilinea
+
 
                         callback(); //finaliza ejecucion asincrona
 
@@ -166,6 +188,55 @@
 
 
                 }
+
+
+                function btnVerHistorialClick() {
+                    var metodoAngular = angular.element(document.querySelector('[ng-controller="MainController"]')).scope().btnBuscarClick;
+                    metodoAngular();
+                    listaHistorial = [];
+                    ruta = [];
+                    var flgMostrarHistorial = angular.element(document.querySelector('[ng-controller="MainController"]')).scope().flgMostrarHistorial;
+                    if (flightPath != undefined && flightPath != null) {
+                        flightPath.setMap(null);
+                    }
+                    //obtener historial
+                    if (flgMostrarHistorial) {
+                        angular.element(document.querySelector('[ng-controller="MainController"]')).scope().obtenerHistorial(function() {
+                            listaHistorial = angular.element(document.querySelector('[ng-controller="MainController"]')).scope().listaHistorial;
+                            if (listaHistorial != undefined && listaHistorial != null) {
+                                listaHistorial.forEach(function(hist) {
+                                    var movPos = {
+                                        lat: hist.geometry.coordinates[0],
+                                        lng: hist.geometry.coordinates[1]
+                                    };
+                                    ruta.push(movPos);
+                                });
+
+                                if (ruta != undefined && ruta != null && ruta.length > 0) {
+                                    flightPath = new google.maps.Polyline({
+                                        path: ruta,
+                                        geodesic: true,
+                                        strokeColor: '#bf4040',
+                                        strokeOpacity: 0.6,
+                                        strokeWeight: 2
+                                    });
+                                    flightPath.setMap(map);
+
+                                }
+
+
+                            }
+                        });
+
+
+
+                    }
+
+
+
+
+                }
+
 
                 //bucle recursivo para asegurar que funcione el setTimeout
                 //var i = 0, n = 100;

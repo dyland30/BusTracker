@@ -232,7 +232,7 @@ module.exports = function(app, passport, acl, mongoose, express) {
 
     routerApi.route('/historial/:id').get(unidadHistorialCtrl.findById).put(unidadHistorialCtrl.update).delete(unidadHistorialCtrl.delete);
 
-    routerApi.route('/unidad/historial/:idUnidad').get(unidadHistorialCtrl.findByUnidadId);
+    routerApi.route('/unidad/historial/:idUnidad/:fechaDesde/:fechaHasta').get(unidadHistorialCtrl.findByUnidadId);
 
     routerApi.route('/organizacion').get(organizacionCtrl.findAll).post(organizacionCtrl.add);
 
