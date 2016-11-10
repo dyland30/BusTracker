@@ -9,6 +9,9 @@
         $scope.listaUnidades = [];
         $scope.fechaHasta = new Date();
         $scope.fechaDesde = new Date();
+
+
+
         var tituloMostrarHist = "Mostrar Historial";
         var tituloOcultarHist = "Ocultar Historial";
 
@@ -153,7 +156,7 @@
 
         $scope.cmbUnidadChange = function(){
           //  alert($scope.unidadSeleccionada._id);
-          
+
 
 
         };
