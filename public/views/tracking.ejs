@@ -43,7 +43,7 @@
                             </span>
 
                         </div>
-                      <!--  <div uib-timepicker ng-model="fchInicio" hour-step="1" minute-step="10" show-meridian="false"></div> -->
+                        <!--  <div uib-timepicker ng-model="fchInicio" hour-step="1" minute-step="10" show-meridian="false"></div> -->
                     </div>
 
                     <div class="form-group">
@@ -55,7 +55,7 @@
                             </span>
 
                         </div>
-                      <!--  <div uib-timepicker ng-model="fchFin" hour-step="1" minute-step="10" show-meridian="false"></div> -->
+                        <!--  <div uib-timepicker ng-model="fchFin" hour-step="1" minute-step="10" show-meridian="false"></div> -->
                     </div>
                     <div class="form-group">
                         <button type="button" class="form-control" name="btnHistorial" onclick="btnVerHistorialClick()">{{btnHistorialTitle}}</button>
@@ -76,15 +76,12 @@
             <script type="text/javascript">
                 // obtener usuario de session
                 var map;
-
+                var currentMarker;
                 var listaMarcadores = [];
                 var ruta = [];
                 var listaHistorial = [];
                 var flightPath;
-
-
-
-
+                var infowindow = null;
 
                 map = new google.maps.Map(document.getElementById('map'), {
                     center: {
@@ -166,13 +163,18 @@
                             };
 
                             var rutaImagen = "/images/icons/";
-                            var nombreImagen = unidad.properties.tipo+".png"; // nombrar segun el tipo de unidad para que por cada tipo haya un marcador distinto
+                            var nombreImagen = unidad.properties.tipo + ".png"; // nombrar segun el tipo de unidad para que por cada tipo haya un marcador distinto
 
                             var marker = new google.maps.Marker({
                                 position: movPos,
                                 map: map,
                                 title: unidad.properties.identificador,
-                                icon: rutaImagen+nombreImagen
+                                icon: rutaImagen + nombreImagen,
+                                unidad: unidad
+                            });
+                            google.maps.event.addListener(marker, 'click', function() {
+                                currentMarker = marker;
+                                mostrarInfo();
                             });
                             listaMarcadores.push(marker);
 
@@ -188,14 +190,36 @@
 
                         //obtener historial y crear polilinea
 
-
                         callback(); //finaliza ejecucion asincrona
 
                     }); // fin  obtener organizaciones
-
-
                 }
 
+                function mostrarInfo() {
+                    marker = currentMarker;
+                    console.log(marker.unidad.properties.identificador);
+
+                    var contentString = "<div>" +
+                        "<h1>" + marker.unidad.properties.identificador + "</h1>" +
+                        "<p>Tipo: " + marker.unidad.properties.tipo + "</p>" +
+                        "<p>Placa: " + marker.unidad.properties.placa + "</p>" +
+                        "<p>Asignado: " + marker.unidad.properties.asignado.nombres + "</p>" +
+                        "<p>Estado: " + marker.unidad.properties.estado + "</p>" +
+                        "</div>";
+
+                    if (infowindow) {
+                        infowindow.close();
+                        infowindow = null;
+                    }
+
+                    infowindow = new google.maps.InfoWindow({
+                        content: contentString,
+                        position: marker.position
+                    });
+
+                    infowindow.open(map);
+
+                }
 
                 function btnVerHistorialClick() {
                     var metodoAngular = angular.element(document.querySelector('[ng-controller="MainController"]')).scope().btnBuscarClick;
@@ -225,7 +249,7 @@
                                         geodesic: true,
                                         strokeColor: '#bf4040',
                                         strokeOpacity: 0.6,
-                                        strokeWeight: 2
+                                        strokeWeight: 4
                                     });
                                     flightPath.setMap(map);
 
@@ -235,12 +259,7 @@
                             }
                         });
 
-
-
                     }
-
-
-
 
                 }
 
