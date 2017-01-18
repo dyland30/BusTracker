@@ -141,7 +141,7 @@
         //  alert($scope.usuarioSeleccionado);
         }
         $scope.cmbUsuarioChange= function(){
-          alert($scope.usuarioSeleccionado._id);
+          //alert($scope.usuarioSeleccionado._id);
         };
 
 
@@ -188,5 +188,6 @@
       }
 
     });
+  
 
 })();

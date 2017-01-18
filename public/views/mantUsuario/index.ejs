@@ -11,10 +11,14 @@
         <% include ../partials/header %>
     </header>
     <main>
-        <script src="../js/comun.js"></script>
         <script src="../js/mantUsuarioApp.js"></script>
+        <script type="text/javascript">
+        // esto debido a que necesitamos lanzar manualmente la segunda ng-app de angular
 
-        <div class="container" ng-app="MantUsuarioApp" ng-controller="MainController">
+          angular.element(document).ready(function() { angular.bootstrap(document.getElementById("MantUsuarioAppCont"), ['MantUsuarioApp']); });
+
+        </script>
+        <div id="MantUsuarioAppCont" class="container" ng-app="MantUsuarioApp" ng-controller="MainController">
             <span us-spinner="{radius:30, width:8, length: 16}"></span>
             <h6>{{usuario.local.email}}</h6>
             <h3>{{organizacion.razon_social}}</h3>

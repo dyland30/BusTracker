@@ -11,58 +11,71 @@
         <% include ../partials/header %>
     </header>
     <main>
-        <script src="../js/comun.js"></script>
-        <script src="../js/mantUnidadApp.js"></script>
+      <script src="../js/mantUnidadApp.js"></script>
+      <script type="text/javascript">
+      // esto debido a que necesitamos lanzar manualmente la segunda ng-app de angular
 
-        <div class="container" ng-app="MantUnidadApp" ng-controller="MainController">
+        angular.element(document).ready(function() { angular.bootstrap(document.getElementById("MantUnidadAppCont"), ['MantUnidadApp']); });
+
+      </script>
+
+        <div id="MantUnidadAppCont" class="container"  ng-controller="MainController">
             <span us-spinner="{radius:30, width:8, length: 16}"></span>
-            <h6>{{usuario.local.email}}</h6>
-            <h3>{{organizacion.razon_social}}</h3>
-            <!-- -->
-            <h4>Lista de Unidades</h4>
-            <button type="button" name="btnNuevo" class="btn btn-success" ng-click="mostrarCrearPopup()"><span class="fa fa-plus"></span> Nueva Unidad</button>
-            <hr/>
-            <table class="table table-bordered table-hover table-condensed">
-                <thead>
-                    <tr>
-                        <th>
-                            Unidad
-                        </th>
-                        <th>
-                            Placa
-                        </th>
-                        <th>
-                            Tipo
-                        </th>
-                        <th>
-                            Asignado A
-                        </th>
-                        <th>
-                            Acciones
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="u in listaUnidades">
-                        <td>
-                            {{u.properties.identificador}}
-                        </td>
-                        <td>
-                            {{u.properties.placa}}
-                        </td>
-                        <td>
-                            {{u.properties.tipo}}
-                        </td>
-                        <td>
-                            {{u.properties.asignado.local.email}}
-                        </td>
-                        <td>
-                            <button type="button" name="btnEditar" class="btn btn-primary" ng-click="mostrarEditarPopup(u)"><span class="fa fa-pencil-square-o"></span> Editar</button>
-                            <button type="button" name="btnEliminar" class="btn btn-danger" ng-click="mostrarEliminarPopup(u)"><span class="fa fa-times"></span> Eliminar</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            
+            <div class="panel panel-default">
+                <div class="panel-heading">Lista de Unidades</div>
+                <div class="panel-body">
+
+                    <button type="button" name="btnNuevo" class="btn btn-success" ng-click="mostrarCrearPopup()"><span class="fa fa-plus"></span> Nueva Unidad</button>
+                    <hr/>
+                    <table class="table table-bordered table-hover table-condensed">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Unidad
+                                </th>
+                                <th>
+                                    Placa
+                                </th>
+                                <th>
+                                    Tipo
+                                </th>
+                                <th>
+                                    Asignado A
+                                </th>
+                                <th>
+                                    Acciones
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="u in listaUnidades">
+                                <td>
+                                    {{u.properties.identificador}}
+                                </td>
+                                <td>
+                                    {{u.properties.placa}}
+                                </td>
+                                <td>
+                                    {{u.properties.tipo}}
+                                </td>
+                                <td>
+                                    {{u.properties.asignado.local.email}}
+                                </td>
+                                <td>
+                                    <button type="button" name="btnEditar" class="btn btn-primary" ng-click="mostrarEditarPopup(u)"><span class="fa fa-pencil-square-o"></span> Editar</button>
+                                    <button type="button" name="btnEliminar" class="btn btn-danger" ng-click="mostrarEliminarPopup(u)"><span class="fa fa-times"></span> Eliminar</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+
+
+            <!-- panel -->
 
             <!-- TEMPLATES-->
             <!-- Crear Unidad-->
@@ -73,42 +86,41 @@
                 <div class="modal-body">
 
                     <div class="panel">
-                      <div class="form-group">
-                        <label for="txtIdentificador">Denominación Unidad</label>
-                        <input type="text" name="txtIdentificador" id="txtIdentificador" class="form-control" ng-model="unidad.properties.identificador">
-                      </div>
-                      <div class="form-group">
-                        <label for="txtPlaca">Matricula</label>
-                        <input type="text" name="txtPlaca" id="txtPlaca" class="form-control" ng-model="unidad.properties.placa">
-                      </div>
-                      <div class="form-group">
-                        <label for="cmbTipo">Tipo</label>
-                        <select class="form-control" name="cmbTipo" id="cmbTipo" ng-model ="unidad.properties.tipo">
+                        <div class="form-group">
+                            <label for="txtIdentificador">Denominación Unidad</label>
+                            <input type="text" name="txtIdentificador" id="txtIdentificador" class="form-control" ng-model="unidad.properties.identificador">
+                        </div>
+                        <div class="form-group">
+                            <label for="txtPlaca">Matricula</label>
+                            <input type="text" name="txtPlaca" id="txtPlaca" class="form-control" ng-model="unidad.properties.placa">
+                        </div>
+                        <div class="form-group">
+                            <label for="cmbTipo">Tipo</label>
+                            <select class="form-control" name="cmbTipo" id="cmbTipo" ng-model="unidad.properties.tipo">
                             <option value="Auto">Auto</option>
                             <option value="Bus">Bus</option>
                             <option value="Camion">Camion</option>
                             <option value="Motocicleta">Motocicleta</option>
                             <option value="Bicicleta">Bicicleta</option>
                         </select>
-                      </div>
-                      <div class="form-group">
-                        <label for="txtAsignadoId">Usuario Asignado</label>
-                        <select class="form-control" name="cmbUsuario" id="cmbUsuario"
-                        ng-options="u.nombres for u in listaUsuarios track by u._id" ng-model ="usuarioSeleccionado" ng-change="cmbUsuarioChange()">
+                        </div>
+                        <div class="form-group">
+                            <label for="txtAsignadoId">Usuario Asignado</label>
+                            <select class="form-control" name="cmbUsuario" id="cmbUsuario" ng-options="u.nombres for u in listaUsuarios track by u._id" ng-model="usuarioSeleccionado" ng-change="cmbUsuarioChange()">
                         </select>
 
-                      </div>
-                      <div class="form-group">
-                        <label for="txtFecharegistro">Fecha de Registro</label>
-                        <input type="text" name="txtFecharegistro" id="txtFecharegistro" class="form-control" ng-value="fecha | date: 'dd/MM/yyyy' " disabled="disabled">
-                      </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="txtFecharegistro">Fecha de Registro</label>
+                            <input type="text" name="txtFecharegistro" id="txtFecharegistro" class="form-control" ng-value="fecha | date: 'dd/MM/yyyy' " disabled="disabled">
+                        </div>
 
                     </div>
 
                 </div>
                 <div class="modal-footer">
-                  <button type="button" name="btnGuardarUnidad" class="btn btn-primary" ng-click="guardar()"><span class="fa fa-floppy-o"></span> Guardar</button>
-                  <button type="button" name="btncancelar" class="btn btn-warning" ng-click="cancelar()"><span class="fa fa-times"></span> Cancelar</button>
+                    <button type="button" name="btnGuardarUnidad" class="btn btn-primary" ng-click="guardar()"><span class="fa fa-floppy-o"></span> Guardar</button>
+                    <button type="button" name="btncancelar" class="btn btn-warning" ng-click="cancelar()"><span class="fa fa-times"></span> Cancelar</button>
                 </div>
             </script>
             <!-- Eliminar Unidad -->
@@ -118,12 +130,12 @@
                 </div>
                 <div class="modal-body">
                     <div class="panel">
-                      <h3 class="text-center">¿Realmente desea eliminar la unidad {{unidad.properties.identificador}}?</h3>
+                        <h3 class="text-center">¿Realmente desea eliminar la unidad {{unidad.properties.identificador}}?</h3>
                     </div>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" name="btnGuardarUnidad" class="btn btn-danger" ng-click="eliminar()"><span class="fa fa-times"></span> Eliminar</button>
-                  <button type="button" name="btncancelar" class="btn btn-success" ng-click="cancelar()"><span class="fa fa-check"></span> Cancelar</button>
+                    <button type="button" name="btnGuardarUnidad" class="btn btn-danger" ng-click="eliminar()"><span class="fa fa-times"></span> Eliminar</button>
+                    <button type="button" name="btncancelar" class="btn btn-success" ng-click="cancelar()"><span class="fa fa-check"></span> Cancelar</button>
                 </div>
             </script>
         </div>

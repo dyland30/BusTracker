@@ -21,9 +21,15 @@
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfaLOJAefzXT75bIWgxd8RmcWz5rWbMec&signed_in=true">
         </script>
 
-        <div class="container" ng-app="trackingApp" ng-controller="MainController">
+        <script type="text/javascript">
+        // esto debido a que necesitamos lanzar manualmente la segunda ng-app de angular
 
-            <h6>{{usuario.local.email}}</h6>
+          angular.element(document).ready(function() { angular.bootstrap(document.getElementById("trackingAppCont"), ['trackingApp']); });
+
+        </script>
+
+        <div id="trackingAppCont" class="container" ng-app="trackingApp" ng-controller="MainController">
+
             <h3>{{organizacion.razon_social}}</h3>
             <!-- Opciones de Filtro -->
             <div class="panel panel-default">
