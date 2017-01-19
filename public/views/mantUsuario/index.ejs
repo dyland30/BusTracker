@@ -13,61 +13,65 @@
     <main>
         <script src="../js/mantUsuarioApp.js"></script>
         <script type="text/javascript">
-        // esto debido a que necesitamos lanzar manualmente la segunda ng-app de angular
+            // esto debido a que necesitamos lanzar manualmente la segunda ng-app de angular
 
-          angular.element(document).ready(function() { angular.bootstrap(document.getElementById("MantUsuarioAppCont"), ['MantUsuarioApp']); });
-
+            angular.element(document).ready(function() {
+                angular.bootstrap(document.getElementById("MantUsuarioAppCont"), ['MantUsuarioApp']);
+            });
         </script>
         <div id="MantUsuarioAppCont" class="container" ng-app="MantUsuarioApp" ng-controller="MainController">
             <span us-spinner="{radius:30, width:8, length: 16}"></span>
-            <h6>{{usuario.local.email}}</h6>
-            <h3>{{organizacion.razon_social}}</h3>
-            <!-- -->
-            <h4>Lista de Usuarios</h4>
-            <button type="button" name="btnNuevo" class="btn btn-success" ng-click="mostrarCrearPopup()"><span class="fa fa-plus"></span> Nuevo Usuario</button>
-            <hr/>
-            <table class="table table-bordered table-hover table-condensed">
-                <thead>
-                    <tr>
-                        <th>
-                            Nombres
-                        </th>
-                        <th>
-                            E-Mail
-                        </th>
-                        <th>
-                          Doc. Identidad
-                        </th>
 
-                        <th>
-                            Estado
-                        </th>
-                        <th>
-                            Acciones
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="u in listaUsuarios">
-                        <td>
-                            {{u.nombres}}
-                        </td>
-                        <td>
-                            {{u.local.email}}
-                        </td>
-                        <td>
-                          {{u.docId}}
-                        </td>
-                        <td>
-                            {{u.estado}}
-                        </td>
-                        <td>
-                            <button type="button" name="btnEditar" class="btn btn-primary" ng-click="mostrarEditarPopup(u)"><span class="fa fa-pencil-square-o"></span> Editar</button>
-                            <button type="button" name="btnEliminar" class="btn btn-danger" ng-click="mostrarEliminarPopup(u)"><span class="fa fa-times"></span> Eliminar</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="panel panel-default">
+                <!-- -->
+                <div class="panel-heading">Administrar usuarios de la compañía</div>
+                <div class="panel-body">
+                    <button type="button" name="btnNuevo" class="btn btn-success" ng-click="mostrarCrearPopup()"><span class="fa fa-plus"></span> Nuevo Usuario</button>
+                    <hr/>
+                    <table class="table table-bordered table-hover table-condensed">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Nombres
+                                </th>
+                                <th>
+                                    E-Mail
+                                </th>
+                                <th>
+                                    Doc. Identidad
+                                </th>
+
+                                <th>
+                                    Estado
+                                </th>
+                                <th>
+                                    Acciones
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="u in listaUsuarios">
+                                <td>
+                                    {{u.nombres}}
+                                </td>
+                                <td>
+                                    {{u.local.email}}
+                                </td>
+                                <td>
+                                    {{u.docId}}
+                                </td>
+                                <td>
+                                    {{u.estado}}
+                                </td>
+                                <td>
+                                    <button type="button" name="btnEditar" class="btn btn-primary" ng-click="mostrarEditarPopup(u)"><span class="fa fa-pencil-square-o"></span> Editar</button>
+                                    <button type="button" name="btnEliminar" class="btn btn-danger" ng-click="mostrarEliminarPopup(u)"><span class="fa fa-times"></span> Eliminar</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
             <!-- TEMPLATES-->
             <!-- Crear Usuario-->
@@ -78,50 +82,50 @@
                 <div class="modal-body">
 
                     <div class="panel">
-                      <div class="form-group">
-                        <label for="txtNombres">Nombres</label>
-                        <input type="text" name="txtNombres" id="txtNombres" class="form-control" ng-model="usuario.nombres">
-                      </div>
-                      <div class="form-group">
-                        <label for="txtEmail">E-Mail</label>
-                        <input type="text" name="txtEmail" id="txtEmail" class="form-control" ng-model="usuario.local.email">
-                      </div>
-                      <div class="form-group">
-                        <label for="txtDocId">Doc. Identidad</label>
-                        <input type="text" name="txtDocId" id="txtDocId" class="form-control" ng-model="usuario.docId">
-                      </div>
+                        <div class="form-group">
+                            <label for="txtNombres">Nombres</label>
+                            <input type="text" name="txtNombres" id="txtNombres" class="form-control" ng-model="usuario.nombres">
+                        </div>
+                        <div class="form-group">
+                            <label for="txtEmail">E-Mail</label>
+                            <input type="text" name="txtEmail" id="txtEmail" class="form-control" ng-model="usuario.local.email">
+                        </div>
+                        <div class="form-group">
+                            <label for="txtDocId">Doc. Identidad</label>
+                            <input type="text" name="txtDocId" id="txtDocId" class="form-control" ng-model="usuario.docId">
+                        </div>
 
-                      <div class="form-group" ng-show="flgEditar">
-                        <label for="ckCambiarClave">Cambiar Clave</label>
-                        <input type="checkbox" name="ckCambiarClave" id="ckCambiarClave" class="form-control" ng-model="flgCambiarClave" >
-                      </div>
-                      <div ng-show="flgCambiarClave">
-                          <div class="form-group">
-                            <label for="txtPassword">Contraseña</label>
-                            <input type="password" name="txtPassword" id="txtPassword" class="form-control" ng-model="clave">
-                          </div>
-                          <div class="form-group">
-                            <label for="txtPasswordRep">Repertir Contraseña</label>
-                            <input type="password" name="txtPasswordRep" id="txtPasswordRep" class="form-control" ng-model="repetirClave">
-                          </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="txtDireccion1">Dirección</label>
-                        <input type="text" name="txtDireccion1" id="txtDireccion1" class="form-control" ng-model="direccion_0">
-                        <input type="text" name="txtDireccion2" id="txtDireccion2" class="form-control" ng-model="direccion_1">
-                      </div>
-                      <div class="form-group">
-                        <label for="cmbRol">Rol</label>
-                        <select class="form-control" name="cmbRol" id="cmbTipo" ng-model ="rolSeleccionado">
+                        <div class="form-group" ng-show="flgEditar">
+                            <label for="ckCambiarClave">Cambiar Clave</label>
+                            <input type="checkbox" name="ckCambiarClave" id="ckCambiarClave" class="form-control" ng-model="flgCambiarClave">
+                        </div>
+                        <div ng-show="flgCambiarClave">
+                            <div class="form-group">
+                                <label for="txtPassword">Contraseña</label>
+                                <input type="password" name="txtPassword" id="txtPassword" class="form-control" ng-model="clave">
+                            </div>
+                            <div class="form-group">
+                                <label for="txtPasswordRep">Repertir Contraseña</label>
+                                <input type="password" name="txtPasswordRep" id="txtPasswordRep" class="form-control" ng-model="repetirClave">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="txtDireccion1">Dirección</label>
+                            <input type="text" name="txtDireccion1" id="txtDireccion1" class="form-control" ng-model="direccion_0">
+                            <input type="text" name="txtDireccion2" id="txtDireccion2" class="form-control" ng-model="direccion_1">
+                        </div>
+                        <div class="form-group">
+                            <label for="cmbRol">Rol</label>
+                            <select class="form-control" name="cmbRol" id="cmbTipo" ng-model="rolSeleccionado">
                             <option value="user">Usuario</option>
                             <option value="companyAdmin">Administrador</option>
                         </select>
-                      </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" name="btnGuardarUsuario" class="btn btn-primary" ng-click="guardar()"><span class="fa fa-floppy-o"></span> Guardar</button>
-                  <button type="button" name="btncancelar" class="btn btn-warning" ng-click="cancelar()"><span class="fa fa-times"></span> Cancelar</button>
+                    <button type="button" name="btnGuardarUsuario" class="btn btn-primary" ng-click="guardar()"><span class="fa fa-floppy-o"></span> Guardar</button>
+                    <button type="button" name="btncancelar" class="btn btn-warning" ng-click="cancelar()"><span class="fa fa-times"></span> Cancelar</button>
                 </div>
             </script>
             <!-- Eliminar Usuario -->
@@ -131,12 +135,12 @@
                 </div>
                 <div class="modal-body">
                     <div class="panel">
-                      <h3 class="text-center">¿Realmente desea desactivar al usuario {{usuario.nombres}}?</h3>
+                        <h3 class="text-center">¿Realmente desea desactivar al usuario {{usuario.nombres}}?</h3>
                     </div>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" name="btnGuardarUsuario" class="btn btn-danger" ng-click="eliminar()"><span class="fa fa-times"></span> Eliminar</button>
-                  <button type="button" name="btncancelar" class="btn btn-success" ng-click="cancelar()"><span class="fa fa-check"></span> Cancelar</button>
+                    <button type="button" name="btnGuardarUsuario" class="btn btn-danger" ng-click="eliminar()"><span class="fa fa-times"></span> Eliminar</button>
+                    <button type="button" name="btncancelar" class="btn btn-success" ng-click="cancelar()"><span class="fa fa-check"></span> Cancelar</button>
                 </div>
             </script>
         </div>
