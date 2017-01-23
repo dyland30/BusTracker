@@ -9,11 +9,17 @@
 <body>
     <header>
         <% include partials/header %>
+
             <style media="screen">
                 #map {
-                    height: 100%
+                    height: 100%;
+                }
+
+                .uib-time input {
+                    width: 50px !important;
                 }
             </style>
+
 
     </header>
     <main>
@@ -22,10 +28,11 @@
         </script>
 
         <script type="text/javascript">
-        // esto debido a que necesitamos lanzar manualmente la segunda ng-app de angular
+            // esto debido a que necesitamos lanzar manualmente la segunda ng-app de angular
 
-          angular.element(document).ready(function() { angular.bootstrap(document.getElementById("trackingAppCont"), ['trackingApp']); });
-
+            angular.element(document).ready(function() {
+                angular.bootstrap(document.getElementById("trackingAppCont"), ['trackingApp']);
+            });
         </script>
 
         <div id="trackingAppCont" class="container" ng-app="trackingApp" ng-controller="MainController">
@@ -34,42 +41,62 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Monitoreo en tiempo real</div>
                 <div class="panel-body">
-                <div class="form form-inline">
-                    <div class="form-group">
-                        <label for="cmbUnidad">Unidad:</label>
-                        <select id="cmbUnidad" class="form-control" style="width: 250px" ng-options="unidad.properties.identificador for unidad in listaUnidades track by unidad._id" ng-model="unidadSeleccionada" ng-change="cmbUnidadChange()">
+                    <div class="form form-inline">
+                        <div class="form-group">
+                            <label for="cmbUnidad">Unidad:</label>
+                            <select id="cmbUnidad" class="form-control" style="width: 100px" ng-options="unidad.properties.identificador for unidad in listaUnidades track by unidad._id" ng-model="unidadSeleccionada" ng-change="cmbUnidadChange()">
                         </select>
 
-                    </div>
-                    <div class="form-group">
-                        <label for="">Desde:</label>
-                        <div class="input-group">
-                            <input type="text" name="fchInicio" class="form-control" id="fchInicio" uib-datepicker-popup="dd/MM/yyyy" is-open="popup1.opened" datepicker-options="dateOptions" ng-model="fechaDesde" />
-                            <span class="input-group-btn">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Desde:</label>
+                            <div class="input-group">
+                                <input type="text" name="fchInicio" class="form-control" id="fchInicio" uib-datepicker-popup="dd/MM/yyyy" is-open="popup1.opened" datepicker-options="dateOptions" ng-model="fechaDesde" style="width: 100px" />
+                                <span class="input-group-btn">
                                   <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
                             </span>
 
+                            </div>
+                            <!--  <div uib-timepicker ng-model="fchInicio" hour-step="1" minute-step="10" show-meridian="false"></div> -->
                         </div>
-                        <!--  <div uib-timepicker ng-model="fchInicio" hour-step="1" minute-step="10" show-meridian="false"></div> -->
-                    </div>
+                        <div class="form-group">
+                            <!--<label for="">Hora Inicio:</label> -->
+                            <div class="input-group">
+                                <div style="width: 100px; ">
+                                    <div uib-timepicker ng-model="horaInicio" id="horaInicioDiv" hour-step="1" minute-step="1" show-meridian="ismeridian"></div>
+                                </div>
 
-                    <div class="form-group">
-                        <label for="">Hasta:</label>
-                        <div class="input-group">
-                            <input type="text" name="fchFin" class="form-control" id="fchFIn" uib-datepicker-popup="dd/MM/yyyy" is-open="popup2.opened" datepicker-options="dateOptions" ng-model="fechaHasta" />
-                            <span class="input-group-btn">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                           <label for="">Hasta:</label>
+                            <div class="input-group">
+                                <input type="text" name="fchFin" class="form-control" id="fchFIn" uib-datepicker-popup="dd/MM/yyyy" is-open="popup2.opened" datepicker-options="dateOptions" ng-model="fechaHasta" style="width: 100px" />
+                                <span class="input-group-btn">
                               <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
                             </span>
 
+                            </div>
+                            <!--  <div uib-timepicker ng-model="fchFin" hour-step="1" minute-step="10" show-meridian="false"></div> -->
                         </div>
-                        <!--  <div uib-timepicker ng-model="fchFin" hour-step="1" minute-step="10" show-meridian="false"></div> -->
-                    </div>
-                    <div class="form-group">
-                        <button type="button" class="form-control" name="btnHistorial" onclick="btnVerHistorialClick()">{{btnHistorialTitle}}</button>
+
+                        <div class="form-group">
+                          <!--   <label for="">Hora Fin:</label>-->
+                            <div class="input-group" style="width: 100px">
+                                <div uib-timepicker ng-model="horaFin" hour-step="1" id="horaFinDiv" minute-step="1" show-meridian="ismeridian" style="width: 100px"></div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <button type="button" class="form-control" name="btnHistorial" onclick="btnVerHistorialClick()">{{btnHistorialTitle}}</button>
+                        </div>
+
                     </div>
 
                 </div>
-              </div>
             </div>
             <!-- MAPA-->
             <div class="panel panel-default" style="height:700px">

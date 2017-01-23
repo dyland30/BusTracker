@@ -10,7 +10,14 @@
         $scope.fechaHasta = new Date();
         $scope.fechaDesde = new Date();
 
+        $scope.horaInicio = new Date();
+        $scope.horaFin = new Date();
 
+        $scope.horaInicio.setHours(0);
+        $scope.horaInicio.setMinutes(0);
+
+        $scope.horaFin.setHours(23);
+        $scope.horaFin.setMinutes(59);
 
         var tituloMostrarHist = "Mostrar Historial";
         var tituloOcultarHist = "Ocultar Historial";
