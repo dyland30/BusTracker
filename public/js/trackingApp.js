@@ -133,14 +133,33 @@
           var fechaDesde = new Date();
           var fechaHasta = new Date();
 
+
+
           if($scope.fechaDesde != undefined && $scope.fechaDesde !=null)
-            fechaDesde = $scope.fechaDesde.toISOString();
+            fechaDesde = $scope.fechaDesde;
           if($scope.fechaHasta != undefined && $scope.fechaHasta !=null)
-            fechaHasta = $scope.fechaHasta.toISOString();
+            fechaHasta = $scope.fechaHasta;
+
+          if($scope.horaInicio != undefined && $scope.horaInicio !=null){
+            fechaDesde.setHours($scope.horaInicio.getHours());
+            fechaDesde.setMinutes($scope.horaInicio.getMinutes());
+          }
+
+          if($scope.horaFin != undefined && $scope.horaFin !=null){
+            fechaHasta.setHours($scope.horaFin.getHours());
+            fechaHasta.setMinutes($scope.horaFin.getMinutes());
+          }
+
+
+
+
+
+
+
 
             $http({
                 method: "GET",
-                url: "api/unidad/historial/" + idUnidad + "/" + fechaDesde + "/" + fechaHasta + "?nocache=" + getNoCache(),
+                url: "api/unidad/historial/" + idUnidad + "/" + fechaDesde.toISOString() + "/" + fechaHasta.toISOString() + "?nocache=" + getNoCache(),
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8'
                 }
@@ -163,8 +182,7 @@
 
         $scope.cmbUnidadChange = function(){
           //  alert($scope.unidadSeleccionada._id);
-
-
+          $scope.btnBuscarClick();
 
         };
 
