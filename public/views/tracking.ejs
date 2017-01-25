@@ -24,7 +24,7 @@
     </header>
     <main>
         <script src="js/trackingApp.js"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfaLOJAefzXT75bIWgxd8RmcWz5rWbMec&signed_in=true">
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfaLOJAefzXT75bIWgxd8RmcWz5rWbMec&signed_in=true&libraries=geometry">
         </script>
 
         <script type="text/javascript">
@@ -44,7 +44,7 @@
                     <div class="form form-inline">
                         <div class="form-group">
                             <label for="cmbUnidad">Unidad:</label>
-                            <select id="cmbUnidad" class="form-control" style="width: 100px" ng-options="unidad.properties.identificador for unidad in listaUnidades track by unidad._id" ng-model="unidadSeleccionada" ng-change="cmbUnidadChange()">
+                            <select id="cmbUnidad" class="form-control" style="width: 200px" ng-options="unidad.properties.identificador for unidad in listaUnidades track by unidad._id" ng-model="unidadSeleccionada" ng-change="cmbUnidadChange()">
                         </select>
 
                         </div>
@@ -116,6 +116,9 @@
                 var listaHistorial = [];
                 var flightPath;
                 var infowindow = null;
+                var mainCtrl = angular.element(document.querySelector('[ng-controller="MainController"]'));
+                var distanciaMetros =0;
+
 
                 map = new google.maps.Map(document.getElementById('map'), {
                     center: {
@@ -172,15 +175,15 @@
                         alt: 0
                     }); */
                     //remover marcadores
-                    var idOrganizacion = angular.element(document.querySelector('[ng-controller="MainController"]')).scope().usuario.idOrganizacion;
+                    var idOrganizacion = mainCtrl.scope().usuario.idOrganizacion;
 
-                    var flgMostrarHistorial = angular.element(document.querySelector('[ng-controller="MainController"]')).scope().flgMostrarHistorial;
+                    var flgMostrarHistorial = mainCtrl.scope().flgMostrarHistorial;
 
-                    var unidadSeleccionada = angular.element(document.querySelector('[ng-controller="MainController"]')).scope().unidadSeleccionada;
+                    var unidadSeleccionada = mainCtrl.scope().unidadSeleccionada;
 
 
                     //marker.setPosition(movPos);
-                    angular.element(document.querySelector('[ng-controller="MainController"]')).scope().obtenerUnidadesOrganizacion(idOrganizacion, function() {
+                    mainCtrl.scope().obtenerUnidadesOrganizacion(idOrganizacion, function() {
 
                         //remover marcadores
                         listaMarcadores.forEach(function(marcador) {
@@ -190,7 +193,7 @@
                         listaMarcadores = [];
 
                         //callback
-                        var unidades = angular.element(document.querySelector('[ng-controller="MainController"]')).scope().listaUnidades;
+                        var unidades = mainCtrl.scope().listaUnidades;
 
                         unidades.forEach(function(unidad) {
                             var movPos = {
@@ -234,42 +237,53 @@
                 function mostrarInfo() {
                     marker = currentMarker;
                     console.log(marker.unidad.properties.identificador);
+                    //seleccionar unidad
+                    mainCtrl.scope().unidadSeleccionada = marker.unidad;
+                    distanciaMetros =0;
+                    btnVerHistorialClick(function(){
+                      var contentString = "<div>" +
+                          "<h1>" + marker.unidad.properties.identificador + "</h1>" +
+                          "<p>Tipo: " + marker.unidad.properties.tipo + "</p>" +
+                          "<p>Placa: " + marker.unidad.properties.placa + "</p>" +
+                          "<p>Asignado: " + marker.unidad.properties.asignado.nombres + "</p>" +
+                          "<p>Estado: " + marker.unidad.properties.estado + "</p>" +
+                          "<p>Distancia Trayecto: " + (distanciaMetros/1000).toFixed(2).toString() + " Km </p>" +
+                          "</div>";
 
-                    var contentString = "<div>" +
-                        "<h1>" + marker.unidad.properties.identificador + "</h1>" +
-                        "<p>Tipo: " + marker.unidad.properties.tipo + "</p>" +
-                        "<p>Placa: " + marker.unidad.properties.placa + "</p>" +
-                        "<p>Asignado: " + marker.unidad.properties.asignado.nombres + "</p>" +
-                        "<p>Estado: " + marker.unidad.properties.estado + "</p>" +
-                        "</div>";
+                      if (infowindow) {
+                          infowindow.close();
+                          infowindow = null;
+                      }
 
-                    if (infowindow) {
-                        infowindow.close();
-                        infowindow = null;
-                    }
+                      infowindow = new google.maps.InfoWindow({
+                          content: contentString,
+                          position: marker.position
+                      });
 
-                    infowindow = new google.maps.InfoWindow({
-                        content: contentString,
-                        position: marker.position
+
+                      infowindow.open(map);
+
                     });
 
-                    infowindow.open(map);
+
+
+
 
                 }
 
-                function btnVerHistorialClick() {
-                    var metodoAngular = angular.element(document.querySelector('[ng-controller="MainController"]')).scope().btnBuscarClick;
+                function btnVerHistorialClick(callback) {
+                    var metodoAngular = mainCtrl.scope().btnBuscarClick;
                     metodoAngular();
                     listaHistorial = [];
                     ruta = [];
-                    var flgMostrarHistorial = angular.element(document.querySelector('[ng-controller="MainController"]')).scope().flgMostrarHistorial;
+                    var flgMostrarHistorial = mainCtrl.scope().flgMostrarHistorial;
                     if (flightPath != undefined && flightPath != null) {
                         flightPath.setMap(null);
                     }
                     //obtener historial
                     if (flgMostrarHistorial) {
-                        angular.element(document.querySelector('[ng-controller="MainController"]')).scope().obtenerHistorial(function() {
-                            listaHistorial = angular.element(document.querySelector('[ng-controller="MainController"]')).scope().listaHistorial;
+                        mainCtrl.scope().obtenerHistorial(function() {
+                            listaHistorial = mainCtrl.scope().listaHistorial;
                             if (listaHistorial != undefined && listaHistorial != null) {
                                 listaHistorial.forEach(function(hist) {
                                     var movPos = {
@@ -283,18 +297,20 @@
                                     flightPath = new google.maps.Polyline({
                                         path: ruta,
                                         geodesic: true,
-                                        strokeColor: '#bf4040',
+                                        strokeColor: '#2874A6',
                                         strokeOpacity: 0.6,
                                         strokeWeight: 4
                                     });
                                     flightPath.setMap(map);
+                                    distanciaMetros = google.maps.geometry.spherical.computeLength(flightPath.getPath().getArray());
 
                                 }
-
-
                             }
+                            callback();
                         });
 
+                    } else{
+                      callback();
                     }
 
                 }
