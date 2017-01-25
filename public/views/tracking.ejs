@@ -118,6 +118,10 @@
                 var infowindow = null;
                 var mainCtrl = angular.element(document.querySelector('[ng-controller="MainController"]'));
                 var distanciaMetros =0;
+                var velocidadPromedioKmh =0;
+                var fchInicioHistorial = new Date();
+                var fchFinHistorial = new Date();
+
 
 
                 map = new google.maps.Map(document.getElementById('map'), {
@@ -248,6 +252,7 @@
                           "<p>Asignado: " + marker.unidad.properties.asignado.nombres + "</p>" +
                           "<p>Estado: " + marker.unidad.properties.estado + "</p>" +
                           "<p>Distancia Trayecto: " + (distanciaMetros/1000).toFixed(2).toString() + " Km </p>" +
+                          "<p>Velocidad Promedio: " + velocidadPromedioKmh.toString() + " Km/h </p>" +
                           "</div>";
 
                       if (infowindow) {
@@ -282,15 +287,30 @@
                     }
                     //obtener historial
                     if (flgMostrarHistorial) {
+
                         mainCtrl.scope().obtenerHistorial(function() {
                             listaHistorial = mainCtrl.scope().listaHistorial;
                             if (listaHistorial != undefined && listaHistorial != null) {
+                                var cont =0;
+
                                 listaHistorial.forEach(function(hist) {
+                                    if(cont==0){
+                                      //primer elemento
+                                      fchInicioHistorial = Date.parse(hist.properties.fecha_registro);
+                                      console.log("F. Inicio: "+(new Date(fchInicioHistorial)).toISOString());
+                                    }
                                     var movPos = {
                                         lat: hist.geometry.coordinates[0],
                                         lng: hist.geometry.coordinates[1]
                                     };
                                     ruta.push(movPos);
+                                    cont++;
+                                    if(cont== listaHistorial.length){
+                                      //uiltimo elemento
+                                      fchFinHistorial = Date.parse(hist.properties.fecha_registro);
+                                      console.log("F. Fin: "+(new Date(fchFinHistorial)).toISOString());
+                                    }
+
                                 });
 
                                 if (ruta != undefined && ruta != null && ruta.length > 0) {
@@ -303,6 +323,13 @@
                                     });
                                     flightPath.setMap(map);
                                     distanciaMetros = google.maps.geometry.spherical.computeLength(flightPath.getPath().getArray());
+                                    //velocidad Promedio
+                                    var diffSegundos = (fchFinHistorial-fchInicioHistorial)/1000;
+                                    if(diffSegundos>0){
+                                      velocidadPromedioKmh = (distanciaMetros*3600)/(1000*diffSegundos);
+                                      console.log("Velocidad: "+velocidadPromedioKmh);
+                                    }
+
 
                                 }
                             }

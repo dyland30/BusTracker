@@ -39,7 +39,7 @@ exports.findByUnidadId = function(req, res) {
             'properties.idUnidad': idUnidad
         }]
     }).sort({
-        'properties.fecha_registro': -1
+        'properties.fecha_registro': 1
     }).exec(function(err, unidadHistoriales) {
         if (err) res.send(500, err.message);
         console.log('GET /unidad/historial')
