@@ -19,6 +19,13 @@
         $scope.horaFin.setHours(23);
         $scope.horaFin.setMinutes(59);
 
+        $scope.mostrarOpcionesBusqueda = true;
+        $scope.btnBusquedaTitle = "Ocultar opciones de búsqueda";
+
+        var tituloMostrarOpc = "Mostrar opciones de búsqued";
+        var tituloOcultarOpc = "Ocultar opciones de búsqueda";
+
+
         var tituloMostrarHist = "Mostrar Historial";
         var tituloOcultarHist = "Ocultar Historial";
 
@@ -27,6 +34,15 @@
 
         $scope.flgMostrarHistorial = false;
 
+        $scope.btnOpcionesBusquedaClick = function(){
+          $scope.mostrarOpcionesBusqueda = !$scope.mostrarOpcionesBusqueda;
+          if($scope.mostrarOpcionesBusqueda){
+              $scope.btnBusquedaTitle = tituloOcultarOpc;
+          } else{
+              $scope.btnBusquedaTitle = tituloMostrarOpc;
+          }
+
+        };
 
         $scope.popup1 = {
             opened: false
@@ -149,13 +165,8 @@
             fechaHasta.setHours($scope.horaFin.getHours());
             fechaHasta.setMinutes($scope.horaFin.getMinutes());
           }
-
-
-
-
-
-
-
+          console.log("fecha desde: "+fechaDesde.toISOString());
+          console.log("fecha hasta: "+fechaHasta.toISOString());
 
             $http({
                 method: "GET",

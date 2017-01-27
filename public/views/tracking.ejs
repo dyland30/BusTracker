@@ -39,8 +39,18 @@
 
             <!-- Opciones de Filtro -->
             <div class="panel panel-default">
-                <div class="panel-heading">Monitoreo en tiempo real</div>
-                <div class="panel-body">
+                <div class="panel-heading">
+                  <div class="row">
+                    <div class="col-md-8">
+                      <h4> Monitoreo en Tiempo Real</h4>
+                    </div>
+                    <div class="col-md-4 text-right" >
+                      <button type="button" class="btn btn-default"name="button" ng-click="btnOpcionesBusquedaClick()"><i class="fa fa-bars" aria-hidden="true"></i>  {{btnBusquedaTitle}}</button>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="panel-body" ng-show="mostrarOpcionesBusqueda">
                     <div class="form form-inline">
                         <div class="form-group">
                             <label for="cmbUnidad">Unidad:</label>
@@ -70,7 +80,7 @@
                         </div>
 
                         <div class="form-group">
-                           <label for="">Hasta:</label>
+                            <label for="">Hasta:</label>
                             <div class="input-group">
                                 <input type="text" name="fchFin" class="form-control" id="fchFIn" uib-datepicker-popup="dd/MM/yyyy" is-open="popup2.opened" datepicker-options="dateOptions" ng-model="fechaHasta" style="width: 100px" />
                                 <span class="input-group-btn">
@@ -82,13 +92,12 @@
                         </div>
 
                         <div class="form-group">
-                          <!--   <label for="">Hora Fin:</label>-->
+                            <!--   <label for="">Hora Fin:</label>-->
                             <div class="input-group" style="width: 100px">
                                 <div uib-timepicker ng-model="horaFin" hour-step="1" id="horaFinDiv" minute-step="1" show-meridian="ismeridian" style="width: 100px"></div>
                             </div>
 
                         </div>
-
 
                         <div class="form-group">
                             <button type="button" class="form-control" name="btnHistorial" onclick="btnVerHistorialClick()">{{btnHistorialTitle}}</button>
@@ -117,8 +126,8 @@
                 var flightPath;
                 var infowindow = null;
                 var mainCtrl = angular.element(document.querySelector('[ng-controller="MainController"]'));
-                var distanciaMetros =0;
-                var velocidadPromedioKmh =0;
+                var distanciaMetros = 0;
+                var velocidadPromedioKmh = 0;
                 var fchInicioHistorial = new Date();
                 var fchFinHistorial = new Date();
 
@@ -238,42 +247,48 @@
                     }); // fin  obtener organizaciones
                 }
 
+                function animateCircle(line) {
+                    var count = 0;
+                    window.setInterval(function() {
+                        count = (count + 1) % 200;
+
+                        var icons = line.get('icons');
+                        icons[0].offset = (count / 2) + '%';
+                        line.set('icons', icons);
+                    }, 20);
+                }
+
                 function mostrarInfo() {
                     marker = currentMarker;
                     console.log(marker.unidad.properties.identificador);
                     //seleccionar unidad
                     mainCtrl.scope().unidadSeleccionada = marker.unidad;
-                    distanciaMetros =0;
-                    btnVerHistorialClick(function(){
-                      var contentString = "<div>" +
-                          "<h1>" + marker.unidad.properties.identificador + "</h1>" +
-                          "<p>Tipo: " + marker.unidad.properties.tipo + "</p>" +
-                          "<p>Placa: " + marker.unidad.properties.placa + "</p>" +
-                          "<p>Asignado: " + marker.unidad.properties.asignado.nombres + "</p>" +
-                          "<p>Estado: " + marker.unidad.properties.estado + "</p>" +
-                          "<p>Distancia Trayecto: " + (distanciaMetros/1000).toFixed(2).toString() + " Km </p>" +
-                          "<p>Velocidad Promedio: " + velocidadPromedioKmh.toString() + " Km/h </p>" +
-                          "</div>";
+                    distanciaMetros = 0;
+                    btnVerHistorialClick(function() {
+                        var contentString = "<div>" +
+                            "<h1>" + marker.unidad.properties.identificador + "</h1>" +
+                            "<p>Tipo: " + marker.unidad.properties.tipo + "</p>" +
+                            "<p>Placa: " + marker.unidad.properties.placa + "</p>" +
+                            "<p>Asignado: " + marker.unidad.properties.asignado.nombres + "</p>" +
+                            "<p>Estado: " + marker.unidad.properties.estado + "</p>" +
+                            "<p>Distancia Trayecto: " + (distanciaMetros / 1000).toFixed(2).toString() + " Km </p>" +
+                            "<p>Velocidad Promedio: " + velocidadPromedioKmh.toString() + " Km/h </p>" +
+                            "</div>";
 
-                      if (infowindow) {
-                          infowindow.close();
-                          infowindow = null;
-                      }
+                        if (infowindow) {
+                            infowindow.close();
+                            infowindow = null;
+                        }
 
-                      infowindow = new google.maps.InfoWindow({
-                          content: contentString,
-                          position: marker.position
-                      });
+                        infowindow = new google.maps.InfoWindow({
+                            content: contentString,
+                            position: marker.position
+                        });
 
 
-                      infowindow.open(map);
+                        infowindow.open(map);
 
                     });
-
-
-
-
-
                 }
 
                 function btnVerHistorialClick(callback) {
@@ -289,15 +304,16 @@
                     if (flgMostrarHistorial) {
 
                         mainCtrl.scope().obtenerHistorial(function() {
+                            velocidadPromedioKmh = 0;
                             listaHistorial = mainCtrl.scope().listaHistorial;
                             if (listaHistorial != undefined && listaHistorial != null) {
-                                var cont =0;
+                                var cont = 0;
 
                                 listaHistorial.forEach(function(hist) {
-                                    if(cont==0){
-                                      //primer elemento
-                                      fchInicioHistorial = Date.parse(hist.properties.fecha_registro);
-                                      console.log("F. Inicio: "+(new Date(fchInicioHistorial)).toISOString());
+                                    if (cont == 0) {
+                                        //primer elemento
+                                        fchInicioHistorial = Date.parse(hist.properties.fecha_registro);
+                                        console.log("F. Inicio: " + (new Date(fchInicioHistorial)).toISOString());
                                     }
                                     var movPos = {
                                         lat: hist.geometry.coordinates[0],
@@ -305,17 +321,26 @@
                                     };
                                     ruta.push(movPos);
                                     cont++;
-                                    if(cont== listaHistorial.length){
-                                      //uiltimo elemento
-                                      fchFinHistorial = Date.parse(hist.properties.fecha_registro);
-                                      console.log("F. Fin: "+(new Date(fchFinHistorial)).toISOString());
+                                    if (cont == listaHistorial.length) {
+                                        //uiltimo elemento
+                                        fchFinHistorial = Date.parse(hist.properties.fecha_registro);
+                                        console.log("F. Fin: " + (new Date(fchFinHistorial)).toISOString());
                                     }
 
                                 });
 
                                 if (ruta != undefined && ruta != null && ruta.length > 0) {
+                                    var lineSymbol = {
+                                        path: google.maps.SymbolPath.CIRCLE,
+                                        scale: 5,
+                                        strokeColor: '#990033'
+                                    };
                                     flightPath = new google.maps.Polyline({
                                         path: ruta,
+                                        icons: [{
+                                            icon: lineSymbol,
+                                            offset: '100%'
+                                        }],
                                         geodesic: true,
                                         strokeColor: '#2874A6',
                                         strokeOpacity: 0.6,
@@ -324,20 +349,21 @@
                                     flightPath.setMap(map);
                                     distanciaMetros = google.maps.geometry.spherical.computeLength(flightPath.getPath().getArray());
                                     //velocidad Promedio
-                                    var diffSegundos = (fchFinHistorial-fchInicioHistorial)/1000;
-                                    if(diffSegundos>0){
-                                      velocidadPromedioKmh = (distanciaMetros*3600)/(1000*diffSegundos);
-                                      console.log("Velocidad: "+velocidadPromedioKmh);
+                                    var diffSegundos = (fchFinHistorial - fchInicioHistorial) / 1000;
+                                    if (diffSegundos > 0) {
+                                        velocidadPromedioKmh = (distanciaMetros * 3600) / (1000 * diffSegundos);
+                                        console.log("Velocidad: " + velocidadPromedioKmh);
+                                        animateCircle(flightPath);
                                     }
 
 
                                 }
                             }
-                            callback();
+                            if(callback!=undefined) callback();
                         });
 
-                    } else{
-                      callback();
+                    } else {
+                        if(callback!=undefined) callback();
                     }
 
                 }
