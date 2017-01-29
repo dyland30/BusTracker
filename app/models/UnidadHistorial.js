@@ -14,6 +14,10 @@ exports = module.exports = function(app, mongoose) {
             fecha_registro: {
                 type: Date,
                 default: Date.now
+            },
+            velocidad_instantanea:{
+              type: String,
+              default: '0'
             }
         },
         geometry: {
