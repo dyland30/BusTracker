@@ -2,9 +2,9 @@
   "name": "bustracker",
   "version": "1.0.0",
   "description": "permite rastrear en tiempo real la ubicacion de unidades de transporte",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start" : "node server.js"
   },
   "keywords": [
     "gps",
@@ -22,6 +22,7 @@
     "connect-flash": "^0.1.1",
     "connect-mongo": "^1.3.2",
     "cookie-parser": "^1.4.3",
+    "cron": "^1.2.1",
     "dotenv": "^2.0.0",
     "ejs": "^2.5.2",
     "express": "^4.14.0",
