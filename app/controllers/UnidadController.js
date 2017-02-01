@@ -70,10 +70,11 @@ exports.update = function(req, res) {
     });
 };
 
-//ACTUALIZAR SOLO LATITUD Y longitud
+//ACTUALIZAR SOLO LATITUD Y longitud tambien establecer estado conectado
 exports.updateLocation = function(req, res) {
     Unidad.findById(req.params.id, function(err, unidad) {
         unidad.geometry.coordinates = req.body.coordinates;
+        unidad.properties.estado ="C";
         unidad.save(function(err) {
             if (err)
                 return res.send(500, err.message);
@@ -81,6 +82,18 @@ exports.updateLocation = function(req, res) {
         });
     });
 };
+
+exports.updateStatus = function(req, res) {
+    Unidad.findById(req.params.id, function(err, unidad) {
+        unidad.properties.estado =req.body.estado;
+        unidad.save(function(err) {
+            if (err)
+                return res.send(500, err.message);
+            res.status(200).jsonp(unidad);
+        });
+    });
+};
+
 
 //DELETE - Delete a unidad with specified ID
 exports.delete = function(req, res) {

@@ -22,7 +22,7 @@
         $scope.mostrarOpcionesBusqueda = true;
         $scope.btnBusquedaTitle = "Ocultar opciones de búsqueda";
 
-        var tituloMostrarOpc = "Mostrar opciones de búsqued";
+        var tituloMostrarOpc = "Mostrar opciones de búsqueda";
         var tituloOcultarOpc = "Ocultar opciones de búsqueda";
 
 

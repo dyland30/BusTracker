@@ -215,7 +215,14 @@
                             };
 
                             var rutaImagen = "/images/icons/";
+
                             var nombreImagen = unidad.properties.tipo + ".png"; // nombrar segun el tipo de unidad para que por cada tipo haya un marcador distinto
+
+                            //si el atributo estado es desconectado agregar BN al nombre de la imagen
+                            if(unidad.properties.estado=="D"){
+                              nombreImagen = unidad.properties.tipo + "BN.png";
+
+                            }
 
                             var marker = new google.maps.Marker({
                                 position: movPos,
@@ -265,14 +272,20 @@
                     mainCtrl.scope().unidadSeleccionada = marker.unidad;
                     distanciaMetros = 0;
                     btnVerHistorialClick(function() {
+                        var estado = "Desconectado";
+                        if(marker.unidad.properties.estado=="C"){
+                          estado ="Conectado";
+                        }
+
                         var contentString = "<div>" +
                             "<h1>" + marker.unidad.properties.identificador + "</h1>" +
                             "<p>Tipo: " + marker.unidad.properties.tipo + "</p>" +
                             "<p>Placa: " + marker.unidad.properties.placa + "</p>" +
                             "<p>Asignado: " + marker.unidad.properties.asignado.nombres + "</p>" +
-                            "<p>Estado: " + marker.unidad.properties.estado + "</p>" +
+                            "<p>Estado: " + estado + "</p>" +
                             "<p>Distancia Trayecto: " + (distanciaMetros / 1000).toFixed(2).toString() + " Km </p>" +
                             "<p>Velocidad Promedio: " + velocidadPromedioKmh.toString() + " Km/h </p>" +
+                            
                             "</div>";
 
                         if (infowindow) {
