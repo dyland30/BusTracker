@@ -4,7 +4,7 @@
   "description": "permite rastrear en tiempo real la ubicacion de unidades de transporte",
   "main": "server.js",
   "scripts": {
-    "start" : "node server.js"
+    "start": "node server.js"
   },
   "keywords": [
     "gps",
@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "acl": "^0.4.9",
+    "async": "^2.1.4",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.15.2",
     "connect-flash": "^0.1.1",

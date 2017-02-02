@@ -1,5 +1,6 @@
 var cron = require('cron'),
     mongoose = require('mongoose');
+var async = require('async');
 
 require('dotenv').config();
 var app = undefined;
@@ -49,6 +50,8 @@ var cronJob = cron.job("*/10 * * * * *", function() {
                 if (err) console.info("Error");
 
                 console.info('la bd devolvio data unidades');
+
+              
                 unidades.forEach(function(u) {
                     if (u.properties != undefined) {
                         console.info(u.properties.identificador);
@@ -65,18 +68,21 @@ var cronJob = cron.job("*/10 * * * * *", function() {
                             if(unidadHistorial!=undefined){
                               console.info(unidadHistorial.properties.idUnidad);
 
-                              mongoose.connection.close();
-                              db = undefined;
+
 
                             }
 
                         });
                     }
 
+
+
+
                 });
 
-                //mongoose.connection.close();
-                //db = undefined;
+                console.info("desconectado");
+                mongoose.connection.close();
+                db = undefined;
                 //console.info(unidades);
 
             });
