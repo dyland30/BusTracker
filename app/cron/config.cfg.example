@@ -1,0 +1,8 @@
+dbserver :
+{
+  ruta:'ruta',
+  puerto:1234,
+  usuario:'usuari',
+  clave:'clav'
+
+}
