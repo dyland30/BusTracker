@@ -19,6 +19,9 @@
         $scope.horaFin.setHours(23);
         $scope.horaFin.setMinutes(59);
 
+        $scope.mostrarUnidadesDesconectadas =false;
+
+
         $scope.mostrarOpcionesBusqueda = true;
         $scope.btnBusquedaTitle = "Ocultar opciones de búsqueda";
 

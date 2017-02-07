@@ -40,70 +40,93 @@
             <!-- Opciones de Filtro -->
             <div class="panel panel-default">
                 <div class="panel-heading">
-                  <div class="row">
-                    <div class="col-md-8">
-                      <h4> Monitoreo en Tiempo Real</h4>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h4> Monitoreo en Tiempo Real</h4>
+                        </div>
+                        <div class="col-md-4 text-right">
+                            <button type="button" class="btn btn-default" name="button" ng-click="btnOpcionesBusquedaClick()"><i class="fa fa-bars" aria-hidden="true"></i>  {{btnBusquedaTitle}}</button>
+                        </div>
                     </div>
-                    <div class="col-md-4 text-right" >
-                      <button type="button" class="btn btn-default"name="button" ng-click="btnOpcionesBusquedaClick()"><i class="fa fa-bars" aria-hidden="true"></i>  {{btnBusquedaTitle}}</button>
-                    </div>
-                  </div>
 
                 </div>
                 <div class="panel-body" ng-show="mostrarOpcionesBusqueda">
-                    <div class="form form-inline">
-                        <div class="form-group">
-                            <label for="cmbUnidad">Unidad:</label>
-                            <select id="cmbUnidad" class="form-control" style="width: 200px" ng-options="unidad.properties.identificador for unidad in listaUnidades track by unidad._id" ng-model="unidadSeleccionada" ng-change="cmbUnidadChange()">
+                    <div class="row">
+                        <div class="form form-inline">
+                            <div class="form-group">
+                                <label for="cmbUnidad">Unidad:</label>
+                                <select id="cmbUnidad" class="form-control" style="width: 200px" ng-options="unidad.properties.identificador for unidad in listaUnidades track by unidad._id" ng-model="unidadSeleccionada" ng-change="cmbUnidadChange()">
                         </select>
 
-                        </div>
-                        <div class="form-group">
-                            <label for="">Desde:</label>
-                            <div class="input-group">
-                                <input type="text" name="fchInicio" class="form-control" id="fchInicio" uib-datepicker-popup="dd/MM/yyyy" is-open="popup1.opened" datepicker-options="dateOptions" ng-model="fechaDesde" style="width: 100px" />
-                                <span class="input-group-btn">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Desde:</label>
+                                <div class="input-group">
+                                    <input type="text" name="fchInicio" class="form-control" id="fchInicio" uib-datepicker-popup="dd/MM/yyyy" is-open="popup1.opened" datepicker-options="dateOptions" ng-model="fechaDesde" style="width: 100px" />
+                                    <span class="input-group-btn">
                                   <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
                             </span>
 
-                            </div>
-                            <!--  <div uib-timepicker ng-model="fchInicio" hour-step="1" minute-step="10" show-meridian="false"></div> -->
-                        </div>
-                        <div class="form-group">
-                            <!--<label for="">Hora Inicio:</label> -->
-                            <div class="input-group">
-                                <div style="width: 100px; ">
-                                    <div uib-timepicker ng-model="horaInicio" id="horaInicioDiv" hour-step="1" minute-step="1" show-meridian="ismeridian"></div>
                                 </div>
-
+                                <!--  <div uib-timepicker ng-model="fchInicio" hour-step="1" minute-step="10" show-meridian="false"></div> -->
                             </div>
-                        </div>
+                            <div class="form-group">
+                                <!--<label for="">Hora Inicio:</label> -->
+                                <div class="input-group">
+                                    <div style="width: 100px; ">
+                                        <div uib-timepicker ng-model="horaInicio" id="horaInicioDiv" hour-step="1" minute-step="1" show-meridian="ismeridian"></div>
+                                    </div>
 
-                        <div class="form-group">
-                            <label for="">Hasta:</label>
-                            <div class="input-group">
-                                <input type="text" name="fchFin" class="form-control" id="fchFIn" uib-datepicker-popup="dd/MM/yyyy" is-open="popup2.opened" datepicker-options="dateOptions" ng-model="fechaHasta" style="width: 100px" />
-                                <span class="input-group-btn">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="">Hasta:</label>
+                                <div class="input-group">
+                                    <input type="text" name="fchFin" class="form-control" id="fchFIn" uib-datepicker-popup="dd/MM/yyyy" is-open="popup2.opened" datepicker-options="dateOptions" ng-model="fechaHasta" style="width: 100px" />
+                                    <span class="input-group-btn">
                               <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
                             </span>
 
-                            </div>
-                            <!--  <div uib-timepicker ng-model="fchFin" hour-step="1" minute-step="10" show-meridian="false"></div> -->
-                        </div>
-
-                        <div class="form-group">
-                            <!--   <label for="">Hora Fin:</label>-->
-                            <div class="input-group" style="width: 100px">
-                                <div uib-timepicker ng-model="horaFin" hour-step="1" id="horaFinDiv" minute-step="1" show-meridian="ismeridian" style="width: 100px"></div>
+                                </div>
+                                <!--  <div uib-timepicker ng-model="fchFin" hour-step="1" minute-step="10" show-meridian="false"></div> -->
                             </div>
 
-                        </div>
+                            <div class="form-group">
+                                <!--   <label for="">Hora Fin:</label>-->
+                                <div class="input-group" style="width: 100px">
+                                    <div uib-timepicker ng-model="horaFin" hour-step="1" id="horaFinDiv" minute-step="1" show-meridian="ismeridian" style="width: 100px"></div>
+                                </div>
 
-                        <div class="form-group">
-                            <button type="button" class="form-control" name="btnHistorial" onclick="btnVerHistorialClick()">{{btnHistorialTitle}}</button>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="button" class="form-control" name="btnHistorial" onclick="btnVerHistorialClick()">{{btnHistorialTitle}}</button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                          <div class="checkbox">
+                            <div class="form-group">
+                                <label>
+                                  <input type="checkbox" name="chkMostrarDesconectadas" ng-model="mostrarUnidadesDesconectadas" /> Mostrar unidades desconectadas.
+                                </label>
+                            </div>
+                          </div>
+
+                        </div>
+                        <div class="col-md-4">
+
+                        </div>
+                        <div class="col-md-4">
+
                         </div>
 
                     </div>
+
+
 
                 </div>
             </div>
@@ -219,8 +242,8 @@
                             var nombreImagen = unidad.properties.tipo + ".png"; // nombrar segun el tipo de unidad para que por cada tipo haya un marcador distinto
 
                             //si el atributo estado es desconectado agregar BN al nombre de la imagen
-                            if(unidad.properties.estado=="D"){
-                              nombreImagen = unidad.properties.tipo + "BN.png";
+                            if (unidad.properties.estado == "D") {
+                                nombreImagen = unidad.properties.tipo + "BN.png";
 
                             }
 
@@ -273,8 +296,8 @@
                     distanciaMetros = 0;
                     btnVerHistorialClick(function() {
                         var estado = "Desconectado";
-                        if(marker.unidad.properties.estado=="C"){
-                          estado ="Conectado";
+                        if (marker.unidad.properties.estado == "C") {
+                            estado = "Conectado";
                         }
 
                         var contentString = "<div>" +
@@ -285,7 +308,7 @@
                             "<p>Estado: " + estado + "</p>" +
                             "<p>Distancia Trayecto: " + (distanciaMetros / 1000).toFixed(2).toString() + " Km </p>" +
                             "<p>Velocidad Promedio: " + velocidadPromedioKmh.toString() + " Km/h </p>" +
-                            
+
                             "</div>";
 
                         if (infowindow) {
@@ -372,11 +395,11 @@
 
                                 }
                             }
-                            if(callback!=undefined) callback();
+                            if (callback != undefined) callback();
                         });
 
                     } else {
-                        if(callback!=undefined) callback();
+                        if (callback != undefined) callback();
                     }
 
                 }
