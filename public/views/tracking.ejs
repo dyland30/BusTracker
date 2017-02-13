@@ -16,7 +16,7 @@
                 }
 
                 .uib-time input {
-                    width: 50px !important;
+                    width: 42px !important;
                 }
             </style>
 
@@ -50,22 +50,84 @@
                     </div>
 
                 </div>
-                <div class="panel-body" ng-show="mostrarOpcionesBusqueda">
+                <div class="panel-body" ng-show="mostrarOpcionesBusqueda" >
+                    <!-- Busqueda por identificador, tipo de unidad, asignado a -->
                     <div class="row">
-                        <div class="form form-inline">
-                            <div class="form-group">
-                                <label for="cmbUnidad">Unidad:</label>
-                                <select id="cmbUnidad" class="form-control" style="width: 200px" ng-options="unidad.properties.identificador for unidad in listaUnidades track by unidad._id" ng-model="unidadSeleccionada" ng-change="cmbUnidadChange()">
-                        </select>
-
+                        <div class="col-md-4">
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <label for="cmbUnidad">Unidad:</label>
+                                    <select id="cmbUnidad" class="form-control" style="width: 200px" ng-options="unidad.properties.identificador for unidad in listaUnidades track by unidad._id" ng-model="unidadSeleccionada" ng-change="cmbUnidadChange()">
+                            </select>
+                                </div>
                             </div>
+
+
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <label for="cmbTipo">Tipo:</label>
+                                    <select id="cmbTipo" class="form-control" style="width: 200px" ng-options="tipo for tipo in listaTipos track by tipo" ng-model="tipoSeleccionado" ng-change="cmbTipoChange()">
+                            </select>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="col-md-4">
+
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <label for="cmbAsignado">Asignado a:</label>
+                                    <select id="cmbAsignado" class="form-control" style="width: 200px" ng-options="usuario.nombres for usuario in listaUsuarios track by usuario._id" ng-model="asignadoSeleccionado" ng-change="cmbUsuarioChange()">
+                          </select>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="row" style="margin-top: 15px;">
+                        <div class="col-md-4">
+                            <div class="checkbox">
+                                <div class="form-group">
+                                    <label>
+                                <input type="checkbox" name="chkMostrarDesconectadas" ng-model="mostrarUnidadesDesconectadas" /> Mostrar unidades desconectadas.
+                              </label>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-4">
+                        </div>
+                        <div class="col-md-4">
+                          <div class="form-group text-center" >
+
+                              <button type="button" class="btn btn-primary" name="button" ng-click="btnFiltrarClick()" style="width:250px"><i class="fa fa-filter" aria-hidden="true"></i>Filtrar</button>
+
+                          </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+              <div class="panel-body" style="padding-top:0px; padding-bottom:0px;">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form form-inline">
+
                             <div class="form-group">
                                 <label for="">Desde:</label>
                                 <div class="input-group">
                                     <input type="text" name="fchInicio" class="form-control" id="fchInicio" uib-datepicker-popup="dd/MM/yyyy" is-open="popup1.opened" datepicker-options="dateOptions" ng-model="fechaDesde" style="width: 100px" />
                                     <span class="input-group-btn">
-                                  <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
-                            </span>
+                                    <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                </span>
 
                                 </div>
                                 <!--  <div uib-timepicker ng-model="fchInicio" hour-step="1" minute-step="10" show-meridian="false"></div> -->
@@ -73,20 +135,23 @@
                             <div class="form-group">
                                 <!--<label for="">Hora Inicio:</label> -->
                                 <div class="input-group">
-                                    <div style="width: 100px; ">
+                                    <div style="width: 80px; ">
                                         <div uib-timepicker ng-model="horaInicio" id="horaInicioDiv" hour-step="1" minute-step="1" show-meridian="ismeridian"></div>
                                     </div>
 
                                 </div>
                             </div>
-
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-inline">
                             <div class="form-group">
                                 <label for="">Hasta:</label>
                                 <div class="input-group">
                                     <input type="text" name="fchFin" class="form-control" id="fchFIn" uib-datepicker-popup="dd/MM/yyyy" is-open="popup2.opened" datepicker-options="dateOptions" ng-model="fechaHasta" style="width: 100px" />
                                     <span class="input-group-btn">
                               <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
-                            </span>
+                              </span>
 
                                 </div>
                                 <!--  <div uib-timepicker ng-model="fchFin" hour-step="1" minute-step="10" show-meridian="false"></div> -->
@@ -94,42 +159,23 @@
 
                             <div class="form-group">
                                 <!--   <label for="">Hora Fin:</label>-->
-                                <div class="input-group" style="width: 100px">
-                                    <div uib-timepicker ng-model="horaFin" hour-step="1" id="horaFinDiv" minute-step="1" show-meridian="ismeridian" style="width: 100px"></div>
+                                <div class="input-group" style="width: 80px">
+                                    <div uib-timepicker ng-model="horaFin" hour-step="1" id="horaFinDiv" minute-step="1" show-meridian="ismeridian"></div>
                                 </div>
 
                             </div>
 
-                            <div class="form-group">
-                                <button type="button" class="form-control" name="btnHistorial" onclick="btnVerHistorialClick()">{{btnHistorialTitle}}</button>
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                          <div class="checkbox">
-                            <div class="form-group">
-                                <label>
-                                  <input type="checkbox" name="chkMostrarDesconectadas" ng-model="mostrarUnidadesDesconectadas" /> Mostrar unidades desconectadas.
-                                </label>
-                            </div>
-                          </div>
-
-                        </div>
-                        <div class="col-md-4">
-
-                        </div>
-                        <div class="col-md-4">
 
                         </div>
 
                     </div>
-
-
-
+                    <div class="col-md-4">
+                    </div>
                 </div>
+              </div>
+
             </div>
+
             <!-- MAPA-->
             <div class="panel panel-default" style="height:700px">
                 <div id="map">
@@ -217,9 +263,11 @@
 
                     var unidadSeleccionada = mainCtrl.scope().unidadSeleccionada;
 
+                    var mostrarUnidadesDesconectadas = mainCtrl.scope().mostrarUnidadesDesconectadas;
+
 
                     //marker.setPosition(movPos);
-                    mainCtrl.scope().obtenerUnidadesOrganizacion(idOrganizacion, function() {
+                    mainCtrl.scope().obtenerUnidadesOrganizacion(idOrganizacion, mostrarUnidadesDesconectadas, function() {
 
                         //remover marcadores
                         listaMarcadores.forEach(function(marcador) {
@@ -289,17 +337,21 @@
                 }
 
                 function mostrarInfo() {
+                    // cada vez que se hace click en el marcador poner en false el mostrar historial
+                    // para que siempre lo muestre
+                    mainCtrl.scope().flgMostrarHistorial = false;
                     marker = currentMarker;
                     console.log(marker.unidad.properties.identificador);
                     //seleccionar unidad
                     mainCtrl.scope().unidadSeleccionada = marker.unidad;
                     distanciaMetros = 0;
+
                     btnVerHistorialClick(function() {
                         var estado = "Desconectado";
                         if (marker.unidad.properties.estado == "C") {
                             estado = "Conectado";
                         }
-
+                        var btnHistorialTitle = mainCtrl.scope().btnHistorialTitle;
                         var contentString = "<div>" +
                             "<h1>" + marker.unidad.properties.identificador + "</h1>" +
                             "<p>Tipo: " + marker.unidad.properties.tipo + "</p>" +
@@ -308,8 +360,8 @@
                             "<p>Estado: " + estado + "</p>" +
                             "<p>Distancia Trayecto: " + (distanciaMetros / 1000).toFixed(2).toString() + " Km </p>" +
                             "<p>Velocidad Promedio: " + velocidadPromedioKmh.toString() + " Km/h </p>" +
-
-                            "</div>";
+                            "<p>" + "<button type='button' id='btnMostrarHistorial' class='form-control btn btn-primary' name='btnHistorial' onclick='btnVerHistorialClick()'>" + btnHistorialTitle + "</button></p>"
+                        "</div>";
 
                         if (infowindow) {
                             infowindow.close();
@@ -333,9 +385,18 @@
                     listaHistorial = [];
                     ruta = [];
                     var flgMostrarHistorial = mainCtrl.scope().flgMostrarHistorial;
+                    var btnHistorialTitle = mainCtrl.scope().btnHistorialTitle;
+
+                    var boton = document.getElementById('btnMostrarHistorial');
+                    if (boton != undefined && boton != null) {
+                        boton.innerHTML = btnHistorialTitle;
+
+                    }
+
                     if (flightPath != undefined && flightPath != null) {
                         flightPath.setMap(null);
                     }
+                    velocidadPromedioKmh = 0;
                     //obtener historial
                     if (flgMostrarHistorial) {
 

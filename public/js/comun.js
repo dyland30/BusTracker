@@ -223,7 +223,7 @@
             var nocache = Math.floor(Math.random() * 9999);
             $http({
                 method: "GET",
-                url: "api/organizacion/unidad/" + idOrganizacion + "?nocache=" + datetime + nocache.toString(),
+                url: "api/organizacion/unidadorg/" + idOrganizacion + "?nocache=" + datetime + nocache.toString(),
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8'
                 }

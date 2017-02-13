@@ -225,8 +225,11 @@ module.exports = function(app, passport, acl, mongoose, express) {
     routerApi.route('/unidad/updatelocation/:id').put(unidadCtrl.updateLocation);
 
 
-    //obtener unidades por organizacion
-    routerApi.route('/organizacion/unidad/:idOrganizacion').get(unidadCtrl.findByOrganizacion);
+    //obtener unidades por organizacion y conectadas / desconectadas
+
+    routerApi.route('/organizacion/unidad/:idOrganizacion/:mostrarUnidadesDesconectadas').get(unidadCtrl.findByOrganizacion);
+    routerApi.route('/organizacion/unidadorg/:idOrganizacion').get(unidadCtrl.findByIdOrg);
+
 
     routerApi.route('/historial').get(unidadHistorialCtrl.findAll).post(unidadHistorialCtrl.add);
 

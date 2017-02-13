@@ -20,6 +20,7 @@
         $scope.horaFin.setMinutes(59);
 
         $scope.mostrarUnidadesDesconectadas =false;
+        $scope.listaTipos = ["Auto","Bicicleta", "Bus", "Camion","Motocicleta"];
 
 
         $scope.mostrarOpcionesBusqueda = true;
@@ -121,13 +122,13 @@
 
         };
         //obtener todas las unidades de la organizacion
-        $scope.obtenerUnidadesOrganizacion = function(idOrganizacion, callback) {
+        $scope.obtenerUnidadesOrganizacion = function(idOrganizacion,mostrarUnidadesDesconectadas, callback) {
 
             //evitar que se repita la peticion
 
             $http({
                 method: "GET",
-                url: "api/organizacion/unidad/" + idOrganizacion + "?nocache=" + getNoCache(),
+                url: "api/organizacion/unidad/" + idOrganizacion +"/"+mostrarUnidadesDesconectadas+ "?nocache=" + getNoCache(),
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8'
                 }
@@ -135,12 +136,12 @@
 
                 $scope.listaUnidades = response.data;
                 //  alert(response.data);
-                callback();
+                if(callback != undefined) callback();
 
 
             }, function myError(response) {
                 $scope.mensajeError = response.statusText;
-                callback();
+                if(callback != undefined) callback();
             });
         };
 
@@ -199,6 +200,19 @@
           $scope.btnBuscarClick();
 
         };
+
+        $scope.cmbTipoChange = function(){
+          //  alert($scope.unidadSeleccionada._id);
+          //$scope.btnBuscarClick();
+
+        };
+
+        $scope.cmbUsuarioChange = function(){
+          //  alert($scope.unidadSeleccionada._id);
+          $scope.btnBuscarClick();
+
+        };
+
 
         $scope.btnBuscarClick = function() {
 

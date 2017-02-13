@@ -11,16 +11,55 @@ exports.findAll = function(req, res) {
     });
 };
 
-//buscar por organizacion y solo unidades activas
+
+//
+//buscar por organizacion y solo unidades activas, ademas considerar conectadas y desconectadas
+exports.findByIdOrg = function(req, res) {
+
+    Unidad.find({
+        $and: [
+            {
+                'properties.idOrganizacion' : req.params.idOrganizacion
+            },   {
+                  'properties.estado': {
+                      $ne: 'E'
+                  }
+            }
+        ]
+    }).populate('properties.asignado').exec(function(err, unidades) {
+        if (err)
+            return res.send(500, err.message);
+        console.log('GET /organizacion/unidades')
+        res.status(200).jsonp(unidades);
+    });
+};
+
+
+//buscar por organizacion y solo unidades activas, ademas considerar conectadas y desconectadas
 exports.findByOrganizacion = function(req, res) {
+  var estado = "C";
+  if(req.params.mostrarUnidadesDesconectadas=="true"){
+    estado = "D";
+    console.log("Mostrar Desconectadas");
+  }
+
+/*
+  // no considerar estado eliminado
+  {
+      'properties.estado': {
+          $ne: 'E'
+      }
+}
+  // se elimina esta sentencia ya que se considerará solo dos estados C y D
+*/
+
+
     Unidad.find({
         $and: [
             {
                 'properties.idOrganizacion' : req.params.idOrganizacion
             }, {
-                'properties.estado': {
-                    $ne: 'E'
-                }
+                'properties.estado': estado
             }
         ]
     }).populate('properties.asignado').exec(function(err, unidades) {
