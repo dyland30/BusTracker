@@ -1,10 +1,13 @@
 (function() {
     'use strict';
 
-    angular.module('trackingApp', ['ui.bootstrap']).controller('MainController', function($scope, $http) {
+    angular.module('trackingApp', ['ui.bootstrap','ComunApp']).controller('MainController', function($scope, $http,comun) {
         $scope.organizacion = {};
         $scope.usuario = {};
         $scope.unidadSeleccionada = {};
+        $scope.asignadoSeleccionado = {};
+        $scope.tipoSeleccionado = {};
+        $scope.unidadFiltroSeleccionada = {};
 
         $scope.listaUnidades = [];
         $scope.fechaHasta = new Date();
@@ -21,6 +24,9 @@
 
         $scope.mostrarUnidadesDesconectadas =false;
         $scope.listaTipos = ["Auto","Bicicleta", "Bus", "Camion","Motocicleta"];
+        $scope.listaUsuarios = [];
+        $scope.unidadesFiltro = [];
+
 
 
         $scope.mostrarOpcionesBusqueda = true;
@@ -76,13 +82,23 @@
 
                 $scope.usuario = response.data;
                 $scope.obtenerOrganizacion($scope.usuario.idOrganizacion);
-                //obtener unidades
-                $scope.obtenerUnidadesOrganizacion($scope.usuario.idOrganizacion, function() {});
+                //obtener unidades para filtro
+                comun.obtenerUnidadesOrganizacion($scope.usuario.idOrganizacion, function(lsUnidades) {
+
+                  $scope.unidadesFiltro = lsUnidades;
+                });
+
+                //obtnener usuarios
+                comun.obtenerUsuariosOrganizacion($scope.usuario.idOrganizacion, function(lsUsuarios) {
+                    $scope.listaUsuarios = lsUsuarios;
+
+                });
+
+
             }, function myError(response) {
                 $scope.mensajeError = response.statusText;
             });
         };
-
 
 
 
@@ -197,7 +213,7 @@
 
         $scope.cmbUnidadChange = function(){
           //  alert($scope.unidadSeleccionada._id);
-          $scope.btnBuscarClick();
+          //$scope.btnBuscarClick();
 
         };
 
@@ -209,7 +225,7 @@
 
         $scope.cmbUsuarioChange = function(){
           //  alert($scope.unidadSeleccionada._id);
-          $scope.btnBuscarClick();
+          //$scope.btnBuscarClick();
 
         };
 

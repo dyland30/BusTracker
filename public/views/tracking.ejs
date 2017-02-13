@@ -50,63 +50,135 @@
                     </div>
 
                 </div>
-                <div class="panel-body" ng-show="mostrarOpcionesBusqueda" >
+
+                <div class="panel-body" ng-show="mostrarOpcionesBusqueda">
                     <!-- Busqueda por identificador, tipo de unidad, asignado a -->
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-inline">
-                                <div class="form-group">
-                                    <label for="cmbUnidad">Unidad:</label>
-                                    <select id="cmbUnidad" class="form-control" style="width: 200px" ng-options="unidad.properties.identificador for unidad in listaUnidades track by unidad._id" ng-model="unidadSeleccionada" ng-change="cmbUnidadChange()">
-                            </select>
+
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#filtrosTab" aria-controls="filtrosTab" role="tab" data-toggle="tab">Opciones de Búsqueda</a></li>
+                        <li role="presentation"><a href="#fechasTab" aria-controls="fechasTab" role="tab" data-toggle="tab">Rango de Fechas</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="filtrosTab">
+
+                            <div class="row" style="margin-top:15px">
+                                <div class="col-md-4">
+                                    <div class="form-inline">
+                                        <div class="form-group">
+                                            <label for="cmbUnidad">Unidad:</label>
+                                            <select id="cmbUnidad" class="form-control" style="width: 200px" ng-options="unidad.properties.identificador for unidad in unidadesFiltro track by unidad._id" ng-model="unidadFiltroSeleccionada" ng-change="cmbUnidadChange()">
+                                                    </select>
+                                        </div>
+                                    </div>
+
+
                                 </div>
+                                <div class="col-md-4">
+                                    <div class="form-inline">
+                                        <div class="form-group">
+                                            <label for="cmbTipo">Tipo:</label>
+                                            <select id="cmbTipo" class="form-control" style="width: 200px" ng-options="tipo for tipo in listaTipos track by tipo" ng-model="tipoSeleccionado" ng-change="cmbTipoChange()">
+                                                    </select>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="col-md-4">
+
+                                    <div class="form-inline">
+                                        <div class="form-group">
+                                            <label for="cmbAsignado">Asignado a:</label>
+                                            <select id="cmbAsignado" class="form-control" style="width: 200px" ng-options="usuario.nombres for usuario in listaUsuarios track by usuario._id" ng-model="asignadoSeleccionado" ng-change="cmbUsuarioChange()">
+                                                  </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div class="row" style="margin-top: 15px;">
+                                <div class="col-md-4">
+                                    <div class="checkbox">
+                                        <div class="form-group">
+                                            <label>
+                                                        <input type="checkbox" name="chkMostrarDesconectadas" ng-model="mostrarUnidadesDesconectadas" /> Mostrar unidades desconectadas.
+                                                      </label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-4">
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group text-center">
+
+                                        <button type="button" class="btn btn-primary" name="button" ng-click="btnFiltrarClick()" style="width:250px"><i class="fa fa-filter" aria-hidden="true"></i>Filtrar</button>
+
+                                    </div>
+
+                                </div>
+
                             </div>
 
-
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-inline">
-                                <div class="form-group">
-                                    <label for="cmbTipo">Tipo:</label>
-                                    <select id="cmbTipo" class="form-control" style="width: 200px" ng-options="tipo for tipo in listaTipos track by tipo" ng-model="tipoSeleccionado" ng-change="cmbTipoChange()">
-                            </select>
+                        <div role="tabpanel" class="tab-pane" id="fechasTab">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form form-inline">
+
+                                        <div class="form-group">
+                                            <label for="">Desde:</label>
+                                            <div class="input-group">
+                                                <input type="text" name="fchInicio" class="form-control" id="fchInicio" uib-datepicker-popup="dd/MM/yyyy" is-open="popup1.opened" datepicker-options="dateOptions" ng-model="fechaDesde" style="width: 100px" />
+                                                <span class="input-group-btn">
+                                          <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                      </span>
+
+                                            </div>
+                                            <!--  <div uib-timepicker ng-model="fchInicio" hour-step="1" minute-step="10" show-meridian="false"></div> -->
+                                        </div>
+                                        <div class="form-group">
+                                            <!--<label for="">Hora Inicio:</label> -->
+                                            <div class="input-group">
+                                                <div style="width: 80px; ">
+                                                    <div uib-timepicker ng-model="horaInicio" id="horaInicioDiv" hour-step="1" minute-step="1" show-meridian="ismeridian"></div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-inline">
+                                        <div class="form-group">
+                                            <label for="">Hasta:</label>
+                                            <div class="input-group">
+                                                <input type="text" name="fchFin" class="form-control" id="fchFIn" uib-datepicker-popup="dd/MM/yyyy" is-open="popup2.opened" datepicker-options="dateOptions" ng-model="fechaHasta" style="width: 100px" />
+                                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+                                    </span>
+
+                                            </div>
+                                            <!--  <div uib-timepicker ng-model="fchFin" hour-step="1" minute-step="10" show-meridian="false"></div> -->
+                                        </div>
+
+                                        <div class="form-group">
+                                            <!--   <label for="">Hora Fin:</label>-->
+                                            <div class="input-group" style="width: 80px">
+                                                <div uib-timepicker ng-model="horaFin" hour-step="1" id="horaFinDiv" minute-step="1" show-meridian="ismeridian"></div>
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                                <div class="col-md-4">
                                 </div>
                             </div>
-
-
-                        </div>
-                        <div class="col-md-4">
-
-                            <div class="form-inline">
-                                <div class="form-group">
-                                    <label for="cmbAsignado">Asignado a:</label>
-                                    <select id="cmbAsignado" class="form-control" style="width: 200px" ng-options="usuario.nombres for usuario in listaUsuarios track by usuario._id" ng-model="asignadoSeleccionado" ng-change="cmbUsuarioChange()">
-                          </select>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-                    <div class="row" style="margin-top: 15px;">
-                        <div class="col-md-4">
-                            <div class="checkbox">
-                                <div class="form-group">
-                                    <label>
-                                <input type="checkbox" name="chkMostrarDesconectadas" ng-model="mostrarUnidadesDesconectadas" /> Mostrar unidades desconectadas.
-                              </label>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="col-md-4">
-                        </div>
-                        <div class="col-md-4">
-                          <div class="form-group text-center" >
-
-                              <button type="button" class="btn btn-primary" name="button" ng-click="btnFiltrarClick()" style="width:250px"><i class="fa fa-filter" aria-hidden="true"></i>Filtrar</button>
-
-                          </div>
 
                         </div>
 
@@ -116,63 +188,8 @@
             </div>
 
             <div class="panel panel-default">
-              <div class="panel-body" style="padding-top:0px; padding-bottom:0px;">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form form-inline">
-
-                            <div class="form-group">
-                                <label for="">Desde:</label>
-                                <div class="input-group">
-                                    <input type="text" name="fchInicio" class="form-control" id="fchInicio" uib-datepicker-popup="dd/MM/yyyy" is-open="popup1.opened" datepicker-options="dateOptions" ng-model="fechaDesde" style="width: 100px" />
-                                    <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
-                                </span>
-
-                                </div>
-                                <!--  <div uib-timepicker ng-model="fchInicio" hour-step="1" minute-step="10" show-meridian="false"></div> -->
-                            </div>
-                            <div class="form-group">
-                                <!--<label for="">Hora Inicio:</label> -->
-                                <div class="input-group">
-                                    <div style="width: 80px; ">
-                                        <div uib-timepicker ng-model="horaInicio" id="horaInicioDiv" hour-step="1" minute-step="1" show-meridian="ismeridian"></div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-inline">
-                            <div class="form-group">
-                                <label for="">Hasta:</label>
-                                <div class="input-group">
-                                    <input type="text" name="fchFin" class="form-control" id="fchFIn" uib-datepicker-popup="dd/MM/yyyy" is-open="popup2.opened" datepicker-options="dateOptions" ng-model="fechaHasta" style="width: 100px" />
-                                    <span class="input-group-btn">
-                              <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
-                              </span>
-
-                                </div>
-                                <!--  <div uib-timepicker ng-model="fchFin" hour-step="1" minute-step="10" show-meridian="false"></div> -->
-                            </div>
-
-                            <div class="form-group">
-                                <!--   <label for="">Hora Fin:</label>-->
-                                <div class="input-group" style="width: 80px">
-                                    <div uib-timepicker ng-model="horaFin" hour-step="1" id="horaFinDiv" minute-step="1" show-meridian="ismeridian"></div>
-                                </div>
-
-                            </div>
-
-
-                        </div>
-
-                    </div>
-                    <div class="col-md-4">
-                    </div>
+                <div class="panel-body" style="padding-top:0px; padding-bottom:0px;">
                 </div>
-              </div>
 
             </div>
 
@@ -490,6 +507,25 @@
                     infoWindow.setContent(browserHasGeolocation ? 'Error: The Geolocation service failed.' :
                         'Error: Your browser doesn\'t support geolocation.');
                 }
+
+                //inicializar tabs
+                $(document).ready(function() {
+                    //activar tabs
+                    $('#filtrosTab a').click(function(e) {
+
+                        if(e!=undefined && e!=null) e.preventDefault();
+
+                        $(this).tab('show');
+                    });
+
+                    $('#fechasTab a').click(function(e) {
+
+                        if(e!=undefined && e!=null) e.preventDefault();
+
+                        $(this).tab('show');
+                    });
+
+                });
             </script>
 
         </div>
