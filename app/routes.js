@@ -227,7 +227,7 @@ module.exports = function(app, passport, acl, mongoose, express) {
 
     //obtener unidades por organizacion y conectadas / desconectadas
 
-    routerApi.route('/organizacion/unidad/:idOrganizacion/:mostrarUnidadesDesconectadas').get(unidadCtrl.findByOrganizacion);
+    routerApi.route('/organizacion/unidad/:idOrganizacion/:mostrarUnidadesDesconectadas/:tipo/:asignado').get(unidadCtrl.findByOrganizacion);
     routerApi.route('/organizacion/unidadorg/:idOrganizacion').get(unidadCtrl.findByIdOrg);
 
 

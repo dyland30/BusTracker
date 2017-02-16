@@ -138,9 +138,10 @@
 
         };
         //obtener todas las unidades de la organizacion
-        $scope.obtenerUnidadesOrganizacion = function(idOrganizacion,mostrarUnidadesDesconectadas, callback) {
+        $scope.obtenerUnidadesFiltro = function(idOrganizacion,mostrarUnidadesDesconectadas, callback) {
 
             //evitar que se repita la peticion
+
 
             $http({
                 method: "GET",
@@ -213,24 +214,24 @@
 
         $scope.cmbUnidadChange = function(){
           //  alert($scope.unidadSeleccionada._id);
-          //$scope.btnBuscarClick();
+          //$scope.btnMostrarHistorialClick();
 
         };
 
         $scope.cmbTipoChange = function(){
           //  alert($scope.unidadSeleccionada._id);
-          //$scope.btnBuscarClick();
+          //$scope.btnMostrarHistorialClick();
 
         };
 
         $scope.cmbUsuarioChange = function(){
           //  alert($scope.unidadSeleccionada._id);
-          //$scope.btnBuscarClick();
+          //$scope.btnMostrarHistorialClick();
 
         };
 
 
-        $scope.btnBuscarClick = function() {
+        $scope.btnMostrarHistorialClick = function() {
 
             $scope.flgMostrarHistorial = !$scope.flgMostrarHistorial;
             if ($scope.flgMostrarHistorial) {

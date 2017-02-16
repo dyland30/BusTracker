@@ -284,7 +284,7 @@
 
 
                     //marker.setPosition(movPos);
-                    mainCtrl.scope().obtenerUnidadesOrganizacion(idOrganizacion, mostrarUnidadesDesconectadas, function() {
+                    mainCtrl.scope().obtenerUnidadesFiltro(idOrganizacion, mostrarUnidadesDesconectadas, function() {
 
                         //remover marcadores
                         listaMarcadores.forEach(function(marcador) {
@@ -397,7 +397,7 @@
                 }
 
                 function btnVerHistorialClick(callback) {
-                    var metodoAngular = mainCtrl.scope().btnBuscarClick;
+                    var metodoAngular = mainCtrl.scope().btnMostrarHistorialClick;
                     metodoAngular();
                     listaHistorial = [];
                     ruta = [];

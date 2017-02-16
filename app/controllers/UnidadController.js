@@ -43,25 +43,32 @@ exports.findByOrganizacion = function(req, res) {
     console.log("Mostrar Desconectadas");
   }
 
-/*
-  // no considerar estado eliminado
-  {
-      'properties.estado': {
-          $ne: 'E'
-      }
-}
-  // se elimina esta sentencia ya que se considerará solo dos estados C y D
-*/
+var arrayBusqueda = [
+    {
+        'properties.idOrganizacion' : req.params.idOrganizacion
+    }, {
+        'properties.estado': estado
+    }
+];
 
+if(req.params.tipo!=undefined && req.params.tipo!=null && req.params.tipo!=""){
+  var buscarPorTipo = {
+      'properties.tipo': req.params.tipo
+  };
+
+  arrayBusqueda.push(buscarPorTipo);
+}
+
+if(req.params.asignado!=undefined && req.params.asignado!=null && req.params.asignado!=""){
+  var buscarPorAsignado = {
+      'properties.asignado': req.params.asignado
+  };
+
+  arrayBusqueda.push(buscarPorAsignado);
+}
 
     Unidad.find({
-        $and: [
-            {
-                'properties.idOrganizacion' : req.params.idOrganizacion
-            }, {
-                'properties.estado': estado
-            }
-        ]
+        $and: arrayBusqueda
     }).populate('properties.asignado').exec(function(err, unidades) {
         if (err)
             return res.send(500, err.message);
