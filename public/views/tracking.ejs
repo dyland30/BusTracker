@@ -45,7 +45,7 @@
                             <h4> Monitoreo en Tiempo Real</h4>
                         </div>
                         <div class="col-md-4 text-right">
-                            <button type="button" class="btn btn-default" name="button" ng-click="btnOpcionesBusquedaClick()"><i class="fa fa-bars" aria-hidden="true"></i>  {{btnBusquedaTitle}}</button>
+                            <button type="button" class="btn btn-primary" name="button" ng-click="btnOpcionesBusquedaClick()"><i class="fa fa-filter" aria-hidden="true"></i>  {{btnBusquedaTitle}}</button>
                         </div>
                     </div>
 
@@ -55,8 +55,8 @@
                     <!-- Busqueda por identificador, tipo de unidad, asignado a -->
 
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#filtrosTab" aria-controls="filtrosTab" role="tab" data-toggle="tab">Opciones de Búsqueda</a></li>
-                        <li role="presentation"><a href="#fechasTab" aria-controls="fechasTab" role="tab" data-toggle="tab">Rango de Fechas</a></li>
+                        <li role="presentation" class="active"><a href="#filtrosTab" aria-controls="filtrosTab" role="tab" data-toggle="tab"><i class="fa fa-search" aria-hidden="true"></i> Opciones de Búsqueda</a></li>
+                        <li role="presentation"><a href="#fechasTab" aria-controls="fechasTab" role="tab" data-toggle="tab"><i class="fa fa-calendar" aria-hidden="true"></i> Rango de Fechas</a></li>
                     </ul>
 
                     <div class="tab-content">
@@ -68,7 +68,8 @@
                                         <div class="form-group">
                                             <label for="cmbUnidad">Unidad:</label>
                                             <select id="cmbUnidad" class="form-control" style="width: 200px" ng-options="unidad.properties.identificador for unidad in unidadesFiltro track by unidad._id" ng-model="unidadFiltroSeleccionada" ng-change="cmbUnidadChange()">
-                                                    </select>
+                                            <option value="">Todas</option>
+                                            </select>
                                         </div>
                                     </div>
 
@@ -79,7 +80,8 @@
                                         <div class="form-group">
                                             <label for="cmbTipo">Tipo:</label>
                                             <select id="cmbTipo" class="form-control" style="width: 200px" ng-options="tipo for tipo in listaTipos track by tipo" ng-model="tipoSeleccionado" ng-change="cmbTipoChange()">
-                                                    </select>
+                                            <option value="">Todos</option>
+                                            </select>
                                         </div>
                                     </div>
 
@@ -91,7 +93,8 @@
                                         <div class="form-group">
                                             <label for="cmbAsignado">Asignado a:</label>
                                             <select id="cmbAsignado" class="form-control" style="width: 200px" ng-options="usuario.nombres for usuario in listaUsuarios track by usuario._id" ng-model="asignadoSeleccionado" ng-change="cmbUsuarioChange()">
-                                                  </select>
+                                            <option value="">Todos</option>
+                                            </select>
                                         </div>
                                     </div>
 
@@ -187,11 +190,7 @@
                 </div>
             </div>
 
-            <div class="panel panel-default">
-                <div class="panel-body" style="padding-top:0px; padding-bottom:0px;">
-                </div>
 
-            </div>
 
             <!-- MAPA-->
             <div class="panel panel-default" style="height:700px">
@@ -282,9 +281,12 @@
 
                     var mostrarUnidadesDesconectadas = mainCtrl.scope().mostrarUnidadesDesconectadas;
 
+                    var tipoSeleccionado = mainCtrl.scope().tipoSeleccionado;
+
+                    var asignadoSeleccionado = mainCtrl.scope().asignadoSeleccionado;
 
                     //marker.setPosition(movPos);
-                    mainCtrl.scope().obtenerUnidadesFiltro(idOrganizacion, mostrarUnidadesDesconectadas, function() {
+                    mainCtrl.scope().obtenerUnidadesFiltro(idOrganizacion, mostrarUnidadesDesconectadas,tipoSeleccionado,asignadoSeleccionado, function() {
 
                         //remover marcadores
                         listaMarcadores.forEach(function(marcador) {

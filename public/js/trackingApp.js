@@ -5,8 +5,8 @@
         $scope.organizacion = {};
         $scope.usuario = {};
         $scope.unidadSeleccionada = {};
-        $scope.asignadoSeleccionado = {};
-        $scope.tipoSeleccionado = {};
+        $scope.asignadoSeleccionado = null;
+        $scope.tipoSeleccionado = null;
         $scope.unidadFiltroSeleccionada = {};
 
         $scope.listaUnidades = [];
@@ -30,10 +30,12 @@
 
 
         $scope.mostrarOpcionesBusqueda = true;
-        $scope.btnBusquedaTitle = "Ocultar opciones de búsqueda";
 
-        var tituloMostrarOpc = "Mostrar opciones de búsqueda";
-        var tituloOcultarOpc = "Ocultar opciones de búsqueda";
+
+        var tituloMostrarOpc = "Mostrar filtros";
+        var tituloOcultarOpc = "Ocultar filtros";
+
+        $scope.btnBusquedaTitle = tituloOcultarOpc;
 
 
         var tituloMostrarHist = "Mostrar Historial";
@@ -138,14 +140,20 @@
 
         };
         //obtener todas las unidades de la organizacion
-        $scope.obtenerUnidadesFiltro = function(idOrganizacion,mostrarUnidadesDesconectadas, callback) {
-
+        $scope.obtenerUnidadesFiltro = function(idOrganizacion,mostrarUnidadesDesconectadas, tipoSeleccionado,asignadoSeleccionado,callback) {
+            var asignadoId = "all";
             //evitar que se repita la peticion
+            if(tipoSeleccionado==undefined || tipoSeleccionado==null || tipoSeleccionado=="")
+              tipoSeleccionado="all";
+
+            if(asignadoSeleccionado!=undefined && asignadoSeleccionado!=null)
+                asignadoId=asignadoSeleccionado._id;
+
 
 
             $http({
                 method: "GET",
-                url: "api/organizacion/unidad/" + idOrganizacion +"/"+mostrarUnidadesDesconectadas+ "?nocache=" + getNoCache(),
+                url: "api/organizacion/unidad/" + idOrganizacion +"/"+mostrarUnidadesDesconectadas+"/"+tipoSeleccionado+"/"+asignadoId + "?nocache=" + getNoCache(),
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8'
                 }

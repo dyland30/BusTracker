@@ -51,7 +51,7 @@ var arrayBusqueda = [
     }
 ];
 
-if(req.params.tipo!=undefined && req.params.tipo!=null && req.params.tipo!=""){
+if(req.params.tipo!=undefined && req.params.tipo!=null && req.params.tipo!="" && req.params.tipo!="all"){
   var buscarPorTipo = {
       'properties.tipo': req.params.tipo
   };
@@ -59,7 +59,7 @@ if(req.params.tipo!=undefined && req.params.tipo!=null && req.params.tipo!=""){
   arrayBusqueda.push(buscarPorTipo);
 }
 
-if(req.params.asignado!=undefined && req.params.asignado!=null && req.params.asignado!=""){
+if(req.params.asignado!=undefined && req.params.asignado!=null && req.params.asignado!="" && req.params.asignado!="all"){
   var buscarPorAsignado = {
       'properties.asignado': req.params.asignado
   };
